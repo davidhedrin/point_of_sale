@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "205166559780",
+    "project_id": "pointofsale-skripsi-app",
+    "storage_bucket": "pointofsale-skripsi-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205166559780:android:6e2e8fe783730566faceb1",
+        "android_client_info": {
+          "package_name": "com.example.point_of_sale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205166559780-catvn837d5ouptnakr780pt5i3cv2oau.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.point_of_sale",
+            "certificate_hash": "10e958a5f05b29d2165fac1e2c104405d8e612a0"
+          }
+        },
+        {
+          "client_id": "205166559780-vbgq39rn5a3hpnaprusbkul4j4vmvaie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz99TsyPcnGx5GM5sN6YCltmv1jh3ha2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205166559780-vbgq39rn5a3hpnaprusbkul4j4vmvaie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
