@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:point_of_sale/widgets/nav_bar.dart';
+import 'package:point_of_sale/screens/customer_screen.dart';
+import 'package:point_of_sale/screens/suplier_screen.dart';
 
 class BodyHomeMenu extends StatefulWidget {
   const BodyHomeMenu({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CustomAppBar(),
       body: Stack(
         children: <Widget> [
           //header POS Pokdakan PT. Pokdakan
@@ -130,7 +130,9 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                 Text('Customer', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.pushNamed(context, CustomerScreen.id);
+                            },
                           ),
                         ),
                         Container(
@@ -164,7 +166,9 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                 Text('Supliers', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.pushNamed(context, SuplierScreen.id);
+                            },
                           ),
                         ),
                       ],

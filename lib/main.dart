@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:point_of_sale/providers/auth_provider.dart';
+import 'package:point_of_sale/screens/customer_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
 import 'package:point_of_sale/screens/login_screen.dart';
 import 'package:point_of_sale/screens/register_screen.dart';
 import 'package:point_of_sale/screens/reset_pw_screen.dart';
 import 'package:point_of_sale/screens/splash_screen.dart';
+import 'package:point_of_sale/screens/suplier_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -40,6 +42,8 @@ class MyApp extends StatelessWidget {
         RegisterScreen.id : (context) => RegisterScreen(),
         LoginScreen.id : (context) => LoginScreen(),
         ResetPassword.id : (context) => ResetPassword(),
+        CustomerScreen.id : (context) => CustomerScreen(),
+        SuplierScreen.id : (context) => SuplierScreen(),
       },
     );
   }

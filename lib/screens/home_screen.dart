@@ -1,6 +1,8 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:point_of_sale/widgets/home_body_navButtom.dart';
+import 'package:point_of_sale/widgets/nav_bar.dart';
+import 'package:point_of_sale/widgets/navigation_drawer.dart';
 import 'package:point_of_sale/widgets/setting_body_navButtom.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,9 +18,13 @@ class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: bodyPages(),
-      bottomNavigationBar: buildBottomNavBar(),
+    return SafeArea(
+      child: Scaffold(
+        drawer: NavigationDrawerWidget(),
+        appBar: CustomAppBar(),
+        body: bodyPages(),
+        bottomNavigationBar: buildBottomNavBar(),
+      ),
     );
   }
 
