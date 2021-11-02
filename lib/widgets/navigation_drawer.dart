@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:point_of_sale/screens/customer_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
+import 'package:point_of_sale/screens/inout_screen.dart';
 import 'package:point_of_sale/screens/login_screen.dart';
+import 'package:point_of_sale/screens/order_screen.dart';
+import 'package:point_of_sale/screens/pos_screen.dart';
+import 'package:point_of_sale/screens/produk_screen.dart';
 import 'package:point_of_sale/screens/suplier_screen.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
@@ -78,19 +82,35 @@ class NavigationDrawerWidget extends StatelessWidget {
             buildMenuItems(
               text: 'Produk',
               icon: Icons.card_travel,
+              onClicked: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, ProdukScreen.id);
+              },
             ),
             const SizedBox(height: 10,),
             buildMenuItems(
               text: 'POS Sistem',
               icon: Icons.card_membership_sharp,
+              onClicked: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, PosScreen.id);
+              },
             ),
             buildMenuItems(
               text: 'Orders',
               icon: Icons.assignment,
+              onClicked: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, OrderScreen.id);
+              },
             ),
             buildMenuItems(
               text: 'In/Out',
               icon: Icons.addchart_sharp,
+              onClicked: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, InOutScreen.id);
+              },
             ),
             Divider(color: Colors.white70,),
             buildMenuItems(

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:point_of_sale/screens/customer_screen.dart';
+import 'package:point_of_sale/screens/inout_screen.dart';
+import 'package:point_of_sale/screens/order_screen.dart';
+import 'package:point_of_sale/screens/pos_screen.dart';
+import 'package:point_of_sale/screens/produk_screen.dart';
 import 'package:point_of_sale/screens/suplier_screen.dart';
 
 class BodyHomeMenu extends StatefulWidget {
@@ -213,7 +217,9 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                 Text('Produk', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.pushNamed(context, ProdukScreen.id);
+                            },
                           ),
                         ),
                         Container(
@@ -247,7 +253,9 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                 Text('POS', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.pushNamed(context, PosScreen.id);
+                            },
                           ),
                         ),
                       ],
@@ -292,7 +300,9 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                 Text('All Orders', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.pushNamed(context, OrderScreen.id);
+                            },
                           ),
                         ),
                         Container(
@@ -326,7 +336,9 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                 Text('In/Out', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.pushNamed(context, InOutScreen.id);
+                            },
                           ),
                         ),
                       ],

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -65,5 +66,24 @@ class AuthProvider extends ChangeNotifier{
       notifyListeners();
       print(e);
     }
+  }
+
+  Future<void> saveCustomerDataToDb({
+    required String namaCustomer,
+    required String mobileCustomer,
+    required String emailCustomer,
+    required String alamatCustomer,
+  }) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    DocumentReference _vendors = FirebaseFirestore.instance.collection('customers').doc(user!.uid);
+    _vendors.set({
+      'uid' : user.uid,
+      'nama_customer' : namaCustomer,
+      'mobile_customer' : '0' + mobileCustomer,
+      'email_customer' : emailCustomer,
+      'alamat_customer' : alamatCustomer,
+    });
+
+    return null;
   }
 }
