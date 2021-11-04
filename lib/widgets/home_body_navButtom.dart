@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:point_of_sale/screens/customer_screen.dart';
-import 'package:point_of_sale/screens/inout_screen.dart';
+import 'package:point_of_sale/screens/category_screen.dart';
 import 'package:point_of_sale/screens/order_screen.dart';
 import 'package:point_of_sale/screens/pos_screen.dart';
 import 'package:point_of_sale/screens/produk_screen.dart';
@@ -329,15 +329,15 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                     height: 80,
                                     width: 80,
                                     decoration: BoxDecoration(
-                                      image: DecorationImage(image: AssetImage('images/inout.png')),
+                                      image: DecorationImage(image: AssetImage('images/category.png')),
                                     ),
                                   ),
                                 ),
-                                Text('In/Out', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
+                                Text('Kategori', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
                             onPressed: (){
-                              Navigator.pushNamed(context, InOutScreen.id);
+                              Navigator.pushNamed(context, CategoryScreen.id);
                             },
                           ),
                         ),

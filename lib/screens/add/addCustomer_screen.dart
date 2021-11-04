@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:point_of_sale/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:point_of_sale/screens/customer_screen.dart';
 
 class AddCustomerData extends StatefulWidget {
   const AddCustomerData({Key? key}) : super(key: key);
@@ -24,9 +24,17 @@ class _AddCustomerDataState extends State<AddCustomerData> {
 
   @override
   Widget build(BuildContext context) {
-    final _authData = Provider.of<AuthProvider>(context);
     scaffomessage(message){
-      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message, textAlign: TextAlign.center,)));
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.yellowAccent.withOpacity(0.5),
+        ),
+      );
     }
 
     return SafeArea(
@@ -62,7 +70,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
               children: <Widget> [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.white70,
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Row(
@@ -85,7 +93,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                         child: TextFormField(
                           validator: (value){
                             if(value!.isEmpty){
-                              return '*masukkan nama customer';
+                              return 'masukkan nama customer';
                             }
                             setState(() {
                               _namaCustomerTextController.text = value;
@@ -103,7 +111,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             prefixIcon: Icon(Icons.perm_identity,),
-                            labelText: 'nama customer',
+                            labelText: '*nama customer',
                             labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
                           ),
                         ),
@@ -115,7 +123,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           keyboardType: TextInputType.emailAddress,
                           validator: (value){
                             if(value!.isEmpty){
-                              return '*masukkan email customer';
+                              return 'masukkan email customer';
                             }
                             final bool _isValid = EmailValidator.validate(_emailTextController.text);
                             if(!_isValid){
@@ -137,7 +145,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             prefixIcon: Icon(Icons.email_rounded,),
-                            labelText: 'email customer',
+                            labelText: '*email customer',
                             labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
                           ),
                         ),
@@ -149,10 +157,10 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           maxLength: 11,
                           validator: (value){
                             if(value!.isEmpty){
-                              return '*masukkan nomor hp';
+                              return 'masukkan nomor hp';
                             }
                             if(value.length<11){
-                              return '*lengkapo nomor hp';
+                              return 'lengkapi nomor hp';
                             }
                             setState(() {
                               mobileCustomer = value;
@@ -167,9 +175,9 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             prefixText: '+62 ',
-                            hintStyle: TextStyle(color: Colors.white),
+                            hintStyle: TextStyle(color: Colors.white70),
                             prefixIcon: Icon(Icons.phone_android,),
-                            labelText: 'no telepon',
+                            labelText: '*no telepon',
                             labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
                           ),
                         ),
@@ -179,7 +187,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                         child: TextFormField(
                           validator: (value){
                             if(value!.isEmpty){
-                              return '*masukkan alamat customer';
+                              return 'masukkan alamat customer';
                             }
                             setState(() {
                               _alamatCustomerTextController.text = value;
@@ -198,8 +206,8 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           maxLines: null,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
-                            prefixIcon: Icon(Icons.perm_identity,),
-                            labelText: 'alamat customer',
+                            prefixIcon: Icon(Icons.location_on_outlined,),
+                            labelText: '*alamat customer',
                             labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
                           ),
                         ),
@@ -210,16 +218,12 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           Expanded(
                             child: FlatButton(
                               color: Colors.blue,
-                              onPressed: (){
+                              onPressed: () {
                                 if(_formKey.currentState!.validate()){
-                                  _authData.saveCustomerDataToDb(
-                                    namaCustomer: namaCustomer,
-                                    mobileCustomer: mobileCustomer,
-                                    emailCustomer: emailCustomer,
-                                    alamatCustomer: alamatCustomer,
+                                  showCupertinoDialog(
+                                    context: context,
+                                    builder: createDialogConfirmation,
                                   );
-                                  _formKey.currentState!.reset();
-                                  Navigator.of(context).pop();
                                 }else if(_formKey.currentState != null){
                                   scaffomessage('Lengkapi semua data!');
                                 }
@@ -240,6 +244,13 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 10,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('tanda * wajib diisi', style: TextStyle(color: Colors.white70, fontStyle: FontStyle.italic),),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -250,4 +261,50 @@ class _AddCustomerDataState extends State<AddCustomerData> {
       ),
     );
   }
+
+  Widget createDialogConfirmation(BuildContext context){
+    return CupertinoAlertDialog(
+      title: Column(
+        children: [
+          Image.asset('images/customer.png', height: 60,),
+          SizedBox(height: 10,),
+          Text(
+            'Tambah Customer Baru!',
+            style: TextStyle(fontSize: 19),
+          ),
+        ],
+      ),
+      content: Text(
+        'Apakah data Customer sudah benar?',
+        style: TextStyle(fontSize: 14),
+      ),
+      actions: [
+        CupertinoDialogAction(
+          child: Text('batal'),
+          onPressed: () => Navigator.pop(context),
+        ),
+        CupertinoDialogAction(
+          child: Text('iya'),
+          onPressed: (){
+            Navigator.pushReplacementNamed(context, CustomerScreen.id);
+          },
+        ),
+      ],
+    );
+  }
 }
+
+
+/*
+if(_formKey.currentState!.validate()){
+_authData.saveCustomerDataToDb(
+namaCustomer: namaCustomer,
+mobileCustomer: mobileCustomer,
+emailCustomer: emailCustomer,
+alamatCustomer: alamatCustomer,
+);
+_formKey.currentState!.reset();
+Navigator.of(context).pop();
+}else if(_formKey.currentState != null){
+scaffomessage('Lengkapi semua data!');
+}*/

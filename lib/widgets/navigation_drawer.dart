@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:point_of_sale/screens/customer_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
-import 'package:point_of_sale/screens/inout_screen.dart';
+import 'package:point_of_sale/screens/category_screen.dart';
+import 'package:point_of_sale/screens/login2_screen.dart';
 import 'package:point_of_sale/screens/login_screen.dart';
 import 'package:point_of_sale/screens/order_screen.dart';
 import 'package:point_of_sale/screens/pos_screen.dart';
@@ -105,20 +106,20 @@ class NavigationDrawerWidget extends StatelessWidget {
               },
             ),
             buildMenuItems(
-              text: 'In/Out',
-              icon: Icons.addchart_sharp,
+              text: 'Category',
+              icon: Icons.category,
               onClicked: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, InOutScreen.id);
+                Navigator.pushReplacementNamed(context, CategoryScreen.id);
               },
             ),
             Divider(color: Colors.white70,),
             buildMenuItems(
               text: 'Keluar',
-              icon: Icons.logout,
+              icon: Icons.power_settings_new,
               onClicked: (){
                 FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, LoginScreen.id);
+                Navigator.pushReplacementNamed(context, Login2Screen.id);
               },
             ),
           ],
