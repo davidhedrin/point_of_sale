@@ -1,7 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:point_of_sale/providers/auth_provider.dart';
 import 'package:point_of_sale/screens/suplier_screen.dart';
+import 'package:provider/provider.dart';
 
 class AddSuplierData extends StatefulWidget {
   const AddSuplierData({Key? key}) : super(key: key);
@@ -14,13 +17,13 @@ class AddSuplierData extends StatefulWidget {
 
 class _AddSuplierDataState extends State<AddSuplierData> {
   final _formKey = GlobalKey<FormState>();
-  var _namaCustomerTextController = TextEditingController();
+
+  var _ketSuplierTextController = TextEditingController();
   var _emailTextController = TextEditingController();
-  var _alamatCustomerTextController = TextEditingController();
-  late String namaCustomer;
-  late String emailCustomer;
-  late String mobileCustomer;
-  late String alamatCustomer;
+  late String namaSuplier;
+  late String emailSuplier;
+  late String mobileSuplier;
+  late String alamatSuplier;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +91,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                   key: _formKey,
                   child: Column(
                     children: [
+                      //nama suplier
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
@@ -96,10 +100,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                               return 'masukkan nama suplier';
                             }
                             setState(() {
-                              _namaCustomerTextController.text = value;
-                            });
-                            setState(() {
-                              namaCustomer = value;
+                              namaSuplier = value;
                             });
                             return null;
                           },
@@ -116,6 +117,9 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 10,),
+
+                      //email suplier
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
@@ -132,9 +136,6 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                             setState(() {
                               _emailTextController.text = value;
                             });
-                            setState(() {
-                              emailCustomer = value;
-                            });
                             return null;
                           },
                           style: TextStyle(
@@ -150,6 +151,9 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 10,),
+
+                      //no ho suplier
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
@@ -163,7 +167,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                               return 'lengkapi nomor hp';
                             }
                             setState(() {
-                              mobileCustomer = value;
+                              mobileSuplier = '0' + value;
                             });
                             return null;
                           },
@@ -182,6 +186,9 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 10,),
+
+                      //alamat suplier
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
@@ -190,10 +197,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                               return 'masukkan alamat suplier';
                             }
                             setState(() {
-                              _alamatCustomerTextController.text = value;
-                            });
-                            setState(() {
-                              alamatCustomer = value;
+                              alamatSuplier = value;
                             });
                             return null;
                           },
@@ -212,9 +216,13 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 10,),
+
+                      //komentar suplier
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          controller: _ketSuplierTextController,
                           validator: (value){
                             return null;
                           },
@@ -234,6 +242,8 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                         ),
                       ),
                       SizedBox(height: 20,),
+
+                      //tombol simpan
                       Row(
                         children: [
                           Expanded(
@@ -266,6 +276,8 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                         ],
                       ),
                       SizedBox(height: 10,),
+
+                      //tanda *
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -284,6 +296,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
   }
 
   Widget createDialogConfirmation(BuildContext context){
+    final _authData = Provider.of<AuthProvider>(context);
     return CupertinoAlertDialog(
       title: Column(
         children: [
@@ -302,12 +315,29 @@ class _AddSuplierDataState extends State<AddSuplierData> {
       actions: [
         CupertinoDialogAction(
           child: Text('batal'),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         CupertinoDialogAction(
           child: Text('iya'),
           onPressed: (){
-            Navigator.pushReplacementNamed(context, SuplierScreen.id);
+            EasyLoading.show(status: 'Menyimpan...');
+            if(namaSuplier != null){
+              Navigator.pushReplacementNamed(context, SuplierScreen.id);
+              EasyLoading.dismiss();
+              _authData.saveSuplierDataToDb(
+                context: context,
+                namaSuplier: namaSuplier,
+                emailSuplier: _emailTextController.text,
+                noHpSuplier: mobileSuplier,
+                alamatSuplier: alamatSuplier,
+                komentar: _ketSuplierTextController.text,
+              );
+            }else{
+              Navigator.pop(context);
+              EasyLoading.showError('Gagal menyimapan');
+            }
           },
         ),
       ],

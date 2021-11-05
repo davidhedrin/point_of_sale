@@ -246,6 +246,53 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                     height: 80,
                                     width: 80,
                                     decoration: BoxDecoration(
+                                      image: DecorationImage(image: AssetImage('images/category.png')),
+                                    ),
+                                  ),
+                                ),
+                                Text('Kategori', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
+                              ],
+                            ),
+                            onPressed: (){
+                              Navigator.pushNamed(context, CategoryScreen.id);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  //all order and kategory
+                  SizedBox(height: 15,),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 130.0,
+                          width: 130.0,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xff8E8585),
+                                blurRadius: 10.0,
+                                spreadRadius: 2.0,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          child: FlatButton(
+                            child: Column(
+                              children: <Widget> [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 80,
+                                    width: 80,
+                                    decoration: BoxDecoration(
                                       image: DecorationImage(image: AssetImage('images/pos.png')),
                                     ),
                                   ),
@@ -258,17 +305,6 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                             },
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-
-                  //all order dan in out
-                  SizedBox(height: 15,),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
                         Container(
                           height: 130.0,
                           width: 130.0,
@@ -302,42 +338,6 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                             ),
                             onPressed: (){
                               Navigator.pushNamed(context, OrderScreen.id);
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 130.0,
-                          width: 130.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xff8E8585),
-                                blurRadius: 10.0,
-                                spreadRadius: 2.0,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: FlatButton(
-                            child: Column(
-                              children: <Widget> [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(image: AssetImage('images/category.png')),
-                                    ),
-                                  ),
-                                ),
-                                Text('Kategori', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
-                              ],
-                            ),
-                            onPressed: (){
-                              Navigator.pushNamed(context, CategoryScreen.id);
                             },
                           ),
                         ),

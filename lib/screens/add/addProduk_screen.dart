@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:point_of_sale/providers/auth_provider.dart';
 import 'package:point_of_sale/screens/produk_screen.dart';
-import 'package:point_of_sale/widgets/category_list.dart';
+import 'package:point_of_sale/widgets/list/suplier_category_list.dart';
 import 'package:provider/provider.dart';
 
 class AddProdukData extends StatefulWidget {
@@ -20,7 +20,6 @@ class AddProdukData extends StatefulWidget {
 class _AddProdukDataState extends State<AddProdukData> {
   final _formKey = GlobalKey<FormState>();
   File? _image;
-  bool _track = false;
 
 /*  List<String> _dropdownItems = [
     'Savings',
@@ -130,7 +129,10 @@ class _AddProdukDataState extends State<AddProdukData> {
                                   Text('gambar*', style: TextStyle(fontSize: 15),),
                                   Icon(Icons.add),
                                 ],
-                              ) : Image.file(_image!),
+                              ) : ClipRRect(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  child: Image.file(_image!),
+                              ),
                             ),
                           ),
                         ),
@@ -148,7 +150,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                                   controller: _suplierTextController,
                                   validator: (value){
                                     if(value!.isEmpty){
-                                      return 'pilih suplier';
+                                      return 'pilih suplier barang';
                                     }
                                   },
                                   style: TextStyle(
@@ -157,14 +159,26 @@ class _AddProdukDataState extends State<AddProdukData> {
                                     fontSize: 20,
                                   ),
                                   decoration: InputDecoration(
-                                    suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[700],),
                                     contentPadding: EdgeInsets.zero,
-                                    prefixIcon: Icon(Icons.supervised_user_circle,),
+                                    prefixIcon: Icon(Icons.category_outlined,),
                                     labelText: 'Suplier*',
                                     labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
                                   ),
                                 ),
                               ),
+                            ),
+                            IconButton(
+                              onPressed: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context){
+                                    return SuplierList();
+                                  },
+                                ).whenComplete((){
+                                  _suplierTextController.text = _authData.selectedSuplier;
+                                });
+                              },
+                              icon: Icon(Icons.arrow_drop_down, color: Colors.grey[700],),
                             ),
                           ],
                         ),
@@ -264,14 +278,12 @@ class _AddProdukDataState extends State<AddProdukData> {
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
                           validator: (value){
-                            if(_track){
-                              if(value!.isEmpty){
-                                return 'masukkan stok ikan';
-                              }
-                              setState(() {
-                                stokProduk = int.parse(value);
-                              });
+                            if(value!.isEmpty){
+                              return 'masukkan stok ikan';
                             }
+                            setState(() {
+                              stokProduk = int.parse(value);
+                            });
                             return null;
                           },
                           style: TextStyle(
@@ -448,8 +460,9 @@ class _AddProdukDataState extends State<AddProdukData> {
             _authData.uploadProdukImage(_image!.path, namaProduk).then((url){
               if(url != null){
                 Navigator.pushReplacementNamed(context, ProdukScreen.id);
-                EasyLoading.showSuccess('Category tersimpan');
+                EasyLoading.dismiss();
                 _authData.saveProdukDataToDb(
+                  context: context,
                   namaProduk: namaProduk,
                   hargaProduk: hargaProduk,
                   codeProduk: kodeProduk,
@@ -468,31 +481,3 @@ class _AddProdukDataState extends State<AddProdukData> {
     );
   }
 }
-
-//kategory Dropdown
-/*DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            prefixIcon: Icon(Icons.category_outlined,),
-                            labelText: '*pilih category',
-                            labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700], fontWeight: FontWeight.bold),
-                          ),
-                          validator: (value) => value == null ? "pilih category" : null,
-                          dropdownColor: Colors.black38,
-                          value: selectedValue,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedValue = newValue!;
-                            });
-                          },
-                          items: _dropdownItems.map((value) => DropdownMenuItem(
-                            child: Text(
-                              value,
-                              style: TextStyle(color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                            value: value,
-                          ),).toList(),
-                        ),*/

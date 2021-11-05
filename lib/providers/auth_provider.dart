@@ -6,6 +6,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:point_of_sale/screens/add/addCategory_screen.dart';
+import 'package:point_of_sale/screens/add/addCustomer_screen.dart';
+import 'package:point_of_sale/screens/add/addProduk_screen.dart';
+import 'package:point_of_sale/screens/add/addSuplier_screen.dart';
 
 class AuthProvider extends ChangeNotifier{
   String error = '';
@@ -113,7 +117,7 @@ class AuthProvider extends ChangeNotifier{
     showCupertinoDialog(context: context, builder: (BuildContext context){
       return CupertinoAlertDialog(
         title: Text(title),
-        content: Text(content),
+        content: Text(content, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
         actions: [
           CupertinoDialogAction(child: Text('Ok'), onPressed: () => Navigator.pop(context),),
         ],
@@ -122,26 +126,39 @@ class AuthProvider extends ChangeNotifier{
   }
 
   //save category to database
-  Future<void>? saveCategoryDataToDb({url, category}) {
+  Future<void>? saveCategoryDataToDb({url, category, context}) {
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
     CollectionReference _category = FirebaseFirestore.instance.collection('categorys');
     try{
-      _category.doc(timeStamp.toString()).set({
-        'category_id' : timeStamp.toString(),
+      _category.doc('CAT-'+timeStamp.toString()).set({
+        'category_id' : 'CAT-'+timeStamp.toString(),
         'category' : category,
         'imageUrl' : url,
       });
-      this.alertDialog(
-        title: 'Success',
-        content: 'Produk berhasil ditambahkan.',
+      this.alertDialogCategory(
+        context: context,
+        title: 'Simpan Category',
+        content: 'Category baru berhasil ditambahkan',
       );
     }catch(e){
       this.alertDialog(
-        title: 'Success',
+        title: 'Simpan Produk',
         content: '${e.toString()}',
       );
     }
     return null;
+  }
+  alertDialogCategory({context, title, content}){
+    showCupertinoDialog(context: context, builder: (BuildContext context){
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+        actions: [
+          CupertinoDialogAction(child: Text('Lagi'), onPressed: () => Navigator.pushReplacementNamed(context, AddCategoryScreen.id),),
+          CupertinoDialogAction(child: Text('Ok'), onPressed: () => Navigator.pop(context),),
+        ],
+      );
+    });
   }
 
   //upload produk image to firebase storeage
@@ -152,24 +169,25 @@ class AuthProvider extends ChangeNotifier{
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
 
     try {
-      await _storage.ref('produkImage/$namaProduk$timeStamp').putFile(file);
+      await _storage.ref('produkImage/-$namaProduk$timeStamp').putFile(file);
     } on FirebaseException catch (e) {
       // e.g, e.code == 'canceled'
       print(e.code);
     }
     //upload url link to database
-    String downloadURL = await _storage.ref('produkImage/$namaProduk$timeStamp').getDownloadURL();
+    String downloadURL = await _storage.ref('produkImage/-$namaProduk$timeStamp').getDownloadURL();
 
     return downloadURL;
   }
 
   //save produk to firebase
-  Future<void>? saveProdukDataToDb({url, namaProduk, hargaProduk, codeProduk, stokProduk, ketProduk,}){
+  Future<void>? saveProdukDataToDb({url, namaProduk, hargaProduk, codeProduk, stokProduk, ketProduk, context}){
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
     CollectionReference _produk = FirebaseFirestore.instance.collection('produks');
     try{
       _produk.doc(timeStamp.toString()).set({
         'id_produk' : timeStamp.toString(),
+        'suplier_produk' : this.selectedSuplier,
         'nama_produk' : namaProduk,
         'category_produk' : this.selectedCategory,
         'harga_produk' :  hargaProduk,
@@ -177,17 +195,109 @@ class AuthProvider extends ChangeNotifier{
         'stok_produk' : stokProduk,
         'ket_produk' : ketProduk,
         'imageUrl' : url,
+
       });
-      this.alertDialog(
+      this.alertDialogProduk(
+        context: context,
         title: 'Simpan Produk',
         content: 'Produk baru berhasil ditambahkan',
       );
     }catch(e){
       this.alertDialog(
+        context: context,
         title: 'Simpan Produk',
         content: '${e.toString()}',
       );
     }
     return null;
+  }
+  alertDialogProduk({context, title, content}){
+    showCupertinoDialog(context: context, builder: (BuildContext context){
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+        actions: [
+          CupertinoDialogAction(child: Text('Lagi'), onPressed: () => Navigator.pushReplacementNamed(context, AddProdukData.id),),
+          CupertinoDialogAction(child: Text('Ok'), onPressed: () => Navigator.pop(context),),
+        ],
+      );
+    });
+  }
+
+  //save suplier to database
+  Future<void>? saveSuplierDataToDb({namaSuplier, emailSuplier, noHpSuplier, alamatSuplier, komentar, context}){
+    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
+    CollectionReference _suplier = FirebaseFirestore.instance.collection('supliers');
+    try{
+      _suplier.doc('SUP-'+timeStamp.toString()).set({
+        'id_suplier' : 'SUP-'+timeStamp.toString(),
+        'nama_suplier' : namaSuplier,
+        'email_suplier' : emailSuplier,
+        'no_handpone' : noHpSuplier,
+        'alamat_suplier' : alamatSuplier,
+        'komentar' : komentar,
+      });
+      this.alertDialogSuplier(
+        context: context,
+        title: 'Simpan Suplier',
+        content: 'Suplier baru berhasil ditambahkan',
+      );
+    }catch(e){
+      this.alertDialog(
+        context: context,
+        title: 'Simpan Suplier',
+        content: '${e.toString()}',
+      );
+    }
+  }
+  alertDialogSuplier({context, title, content}){
+    showCupertinoDialog(context: context, builder: (BuildContext context){
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+        actions: [
+          CupertinoDialogAction(child: Text('Lagi'), onPressed: () => Navigator.pushReplacementNamed(context, AddSuplierData.id),),
+          CupertinoDialogAction(child: Text('Ok'), onPressed: () => Navigator.pop(context),),
+        ],
+      );
+    });
+  }
+
+  //save customer to database
+  Future<void>? saveCustomerDataToDb({namaCustomer, emailCustomer, noHpCustomer, alamatCustomer, context}){
+    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
+    CollectionReference _customer = FirebaseFirestore.instance.collection('customers');
+    try{
+      _customer.doc('COS-'+timeStamp.toString()).set({
+        'id_customer' : 'COS-'+timeStamp.toString(),
+        'nama_customer' : namaCustomer,
+        'email_customer' : emailCustomer,
+        'no_handpone' : '+62'+noHpCustomer,
+        'alamat_customer' : alamatCustomer,
+      });
+      this.alertDialogCustomer(
+        context: context,
+        title: 'Simpan Customer',
+        content: 'Customer baru berhasil ditambahkan',
+      );
+    }catch(e){
+      this.alertDialog(
+        context: context,
+        title: 'Simpan Customer',
+        content: '${e.toString()}',
+      );
+    }
+  }
+  alertDialogCustomer({context, title, content}){
+    showCupertinoDialog(context: context, builder: (BuildContext context){
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+        actions: [
+          CupertinoDialogAction(child: Text('Lagi'), onPressed: () => Navigator.pushReplacementNamed(context, AddCustomerData.id),),
+          CupertinoDialogAction(child: Text('Ok'), onPressed: () => Navigator.pop(context),),
+        ],
+      );
+    });
   }
 }

@@ -232,8 +232,9 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
             uploadFile(_authData.image.path).then((url){
               if(url!=null){
                 Navigator.pushReplacementNamed(context, CategoryScreen.id);
-                EasyLoading.showSuccess('Category tersimpan');
+                EasyLoading.dismiss();
                 _authData.saveCategoryDataToDb(
+                  context: context,
                   url: url,
                   category: _categoryTextController.text,
                 );

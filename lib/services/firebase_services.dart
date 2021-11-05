@@ -10,4 +10,8 @@ class FirebaseServices{
   }
   
   CollectionReference category = FirebaseFirestore.instance.collection('categorys');
+
+  CollectionReference suplier = FirebaseFirestore.instance.collection('supliers');
+
+  CollectionReference customer = FirebaseFirestore.instance.collection('customers');
 }

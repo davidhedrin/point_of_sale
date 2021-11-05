@@ -1,7 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:point_of_sale/providers/auth_provider.dart';
 import 'package:point_of_sale/screens/customer_screen.dart';
+import 'package:provider/provider.dart';
 
 class AddCustomerData extends StatefulWidget {
   const AddCustomerData({Key? key}) : super(key: key);
@@ -14,11 +17,8 @@ class AddCustomerData extends StatefulWidget {
 
 class _AddCustomerDataState extends State<AddCustomerData> {
   final _formKey = GlobalKey<FormState>();
-  var _namaCustomerTextController = TextEditingController();
   var _emailTextController = TextEditingController();
-  var _alamatCustomerTextController = TextEditingController();
   late String namaCustomer;
-  late String emailCustomer;
   late String mobileCustomer;
   late String alamatCustomer;
 
@@ -96,9 +96,6 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                               return 'masukkan nama customer';
                             }
                             setState(() {
-                              _namaCustomerTextController.text = value;
-                            });
-                            setState(() {
                               namaCustomer = value;
                             });
                             return null;
@@ -131,9 +128,6 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                             }
                             setState(() {
                               _emailTextController.text = value;
-                            });
-                            setState(() {
-                              emailCustomer = value;
                             });
                             return null;
                           },
@@ -189,9 +183,6 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                             if(value!.isEmpty){
                               return 'masukkan alamat customer';
                             }
-                            setState(() {
-                              _alamatCustomerTextController.text = value;
-                            });
                             setState(() {
                               alamatCustomer = value;
                             });
@@ -263,6 +254,8 @@ class _AddCustomerDataState extends State<AddCustomerData> {
   }
 
   Widget createDialogConfirmation(BuildContext context){
+    final _authData = Provider.of<AuthProvider>(context);
+
     return CupertinoAlertDialog(
       title: Column(
         children: [
@@ -287,24 +280,17 @@ class _AddCustomerDataState extends State<AddCustomerData> {
           child: Text('iya'),
           onPressed: (){
             Navigator.pushReplacementNamed(context, CustomerScreen.id);
+            EasyLoading.dismiss();
+            _authData.saveCustomerDataToDb(
+              context: context,
+              namaCustomer: namaCustomer,
+              emailCustomer: _emailTextController.text,
+              noHpCustomer: mobileCustomer,
+              alamatCustomer: alamatCustomer,
+            );
           },
         ),
       ],
     );
   }
 }
-
-
-/*
-if(_formKey.currentState!.validate()){
-_authData.saveCustomerDataToDb(
-namaCustomer: namaCustomer,
-mobileCustomer: mobileCustomer,
-emailCustomer: emailCustomer,
-alamatCustomer: alamatCustomer,
-);
-_formKey.currentState!.reset();
-Navigator.of(context).pop();
-}else if(_formKey.currentState != null){
-scaffomessage('Lengkapi semua data!');
-}*/

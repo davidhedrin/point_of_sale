@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:point_of_sale/screens/add/addCategory_screen.dart';
@@ -19,7 +21,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: DefaultTabController(
         length: 2,
@@ -45,6 +46,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             decoration: BoxDecoration(
               color: Color(0xff363636),
             ),
+            //tampilkan category
             child: StreamBuilder<QuerySnapshot>(
               stream: _services.category.snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
@@ -54,17 +56,92 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return Center(child: CircularProgressIndicator(),);
                 }
-                return ListView(
-                  children: snapshot.data!.docs.map((DocumentSnapshot document){
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage((document.data()! as dynamic)['imageUrl']),
-
-                      ),
-                      title: Text((document.data()! as dynamic)['category'], style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
-                    );
-                  }).toList(),
-                );
+                if(snapshot.data!.docs.length == 0){//jika data kosong
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 230,
+                          child: Image.asset('images/categoryEmpty.png')
+                        ),
+                        SizedBox(height: 15,),
+                        Text('Berlum ada Category!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
+                      ],
+                    ),
+                  );
+                }else{
+                  return ListView(
+                    children: snapshot.data!.docs.map((DocumentSnapshot document){
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 17, right: 25, left: 25),
+                        height: 100,//tinggi gambar
+                        child: Stack(
+                          children: [
+                            Positioned.fill(//background image
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.fill,),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 100,//tinggi background
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                  ),
+                                  color: Colors.black.withOpacity(0.6),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 10,
+                              bottom: 10,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  children: [
+                                    ClipOval(
+                                      child: Container(
+                                        color: Colors.white,
+                                        padding: EdgeInsets.all(2),
+                                        height: 70,//size gambar
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(50.0),
+                                          child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.fill,),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 15.0),
+                                      child: Text((document.data()! as dynamic)['category'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget> [
+                                IconButton(
+                                  onPressed: (){},
+                                  icon: Icon(Icons.delete_forever, color: Colors.red, size: 30,),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }
               },
             ),
           ),
@@ -81,7 +158,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 }
-
 
 //dalam body
 /*Column(
@@ -104,3 +180,5 @@ Center(child: Text('View Pengeluaran', style: TextStyle(color: Colors.black),),)
 ),
 ],
 ),*/
+
+

@@ -88,6 +88,14 @@ class NavigationDrawerWidget extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, ProdukScreen.id);
               },
             ),
+            buildMenuItems(
+              text: 'Category',
+              icon: Icons.category,
+              onClicked: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, CategoryScreen.id);
+              },
+            ),
             const SizedBox(height: 10,),
             buildMenuItems(
               text: 'POS Sistem',
@@ -103,14 +111,6 @@ class NavigationDrawerWidget extends StatelessWidget {
               onClicked: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, OrderScreen.id);
-              },
-            ),
-            buildMenuItems(
-              text: 'Category',
-              icon: Icons.category,
-              onClicked: () {
-                Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, CategoryScreen.id);
               },
             ),
             Divider(color: Colors.white70,),
