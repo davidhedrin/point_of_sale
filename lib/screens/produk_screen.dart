@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:point_of_sale/screens/add/addProduk_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
+import 'package:point_of_sale/services/firebase_services.dart';
 import 'package:point_of_sale/widgets/navigation_drawer.dart';
 
 class ProdukScreen extends StatefulWidget {
@@ -13,6 +16,10 @@ class ProdukScreen extends StatefulWidget {
 }
 
 class _ProdukScreenState extends State<ProdukScreen> {
+  final numbers = List.generate(100, (index) => '$index');
+  final FirebaseServices _services = FirebaseServices();
+  String perKg = '/kg';
+
   @override
   Widget build(BuildContext context) {
 
@@ -39,10 +46,99 @@ class _ProdukScreenState extends State<ProdukScreen> {
           decoration: BoxDecoration(
             color: Color(0xff363636),
           ),
-          child: ListView(
-            children: <Widget>[
-              Center(child: Text('ini Produk Screen'))
-            ],
+          child: StreamBuilder(
+            stream: _services.produk.snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+              if(snapshot.hasError){
+                return Text('Terjadi kesalahan');
+              }
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return Center(child: CircularProgressIndicator(),);
+              }
+              if(snapshot.data!.docs.length == 0){//jika data kosong
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          height: 220,
+                          child: Image.asset('images/Emptyproduk.png')
+                      ),
+                      SizedBox(height: 10,),
+                      Text('Berlum ada Produk!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
+                    ],
+                  ),
+                );
+              }else{
+                return Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: GridView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 20.0,
+                        crossAxisSpacing: 20.0,
+                        childAspectRatio: 0.95,
+                      ),
+                      itemBuilder: (context, index){
+                        return ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            color: Colors.black45,
+                            child: GridTile(
+                              /*header: Row(
+                                children: [
+                                  Icon(Icons.delete_forever, color: Colors.red,),
+                                  Text(
+                                    snapshot.data!.docs[index].get('nama_produk'),
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                                  ),
+                                ],
+                              ),*/
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                                      child: Image.network(snapshot.data!.docs[index].get('imageUrl'), width: 90,),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              footer: Column(
+                                children: [
+                                  Text(
+                                    snapshot.data!.docs[index].get('category_produk'),
+                                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                                  ),
+                                  Text(
+                                    snapshot.data!.docs[index].get('nama_produk'),
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(snapshot.data!.docs[index].get('harga_produk')),
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                      ),
+                                      Text('/kg', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              }
+            },
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(

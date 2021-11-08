@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:point_of_sale/providers/auth_provider.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
-import 'package:point_of_sale/screens/register_screen.dart';
+import 'package:point_of_sale/screens/register_email_screen.dart';
 import 'package:point_of_sale/screens/reset_pw_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   setState(() {
                                     _loading = true;
                                   });
-                                  _authData.loginVendor(email, password).then((credential){
+                                  _authData.loginAdmin(email, password).then((credential){
                                     if(credential != null){
                                       setState(() {
                                         _loading = false;

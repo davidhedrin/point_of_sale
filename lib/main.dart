@@ -15,8 +15,11 @@ import 'package:point_of_sale/screens/login_screen.dart';
 import 'package:point_of_sale/screens/order_screen.dart';
 import 'package:point_of_sale/screens/pos_screen.dart';
 import 'package:point_of_sale/screens/produk_screen.dart';
-import 'package:point_of_sale/screens/register_screen.dart';
+import 'package:point_of_sale/screens/register_admin_screen.dart';
+import 'package:point_of_sale/screens/register_email_screen.dart';
+import 'package:point_of_sale/screens/reset_pw_admin_screen.dart';
 import 'package:point_of_sale/screens/reset_pw_screen.dart';
+import 'package:point_of_sale/screens/show_password_screen.dart';
 import 'package:point_of_sale/screens/splash_screen.dart';
 import 'package:point_of_sale/screens/suplier_screen.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +32,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider(create: (_) => AuthProvider())
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+
       ],
       child: MyApp(),
     ),);
@@ -52,9 +56,11 @@ class MyApp extends StatelessWidget {
         SplashScreen.id : (context) => SplashScreen(),
         HomeScreen.id : (context) => HomeScreen(),
         RegisterScreen.id : (context) => RegisterScreen(),
+        RegisterAdminScreen.id : (context) => RegisterAdminScreen(),
         LoginScreen.id : (context) => LoginScreen(),
         Login2Screen.id : (context) => Login2Screen(),
         ResetPassword.id : (context) => ResetPassword(),
+        ResetPasswordAdmin.id : (context) => ResetPasswordAdmin(),
         CustomerScreen.id : (context) => CustomerScreen(),
         SuplierScreen.id : (context) => SuplierScreen(),
         ProdukScreen.id : (context) => ProdukScreen(),
@@ -66,6 +72,8 @@ class MyApp extends StatelessWidget {
         AddProdukData.id : (context) => AddProdukData(),
         AddPosCartScreen.id : (context) => AddPosCartScreen(),
         AddCategoryScreen.id : (context) => AddCategoryScreen(),
+
+        ShowForgotePassword.id : (context) => ShowForgotePassword(),
       },
     );
   }

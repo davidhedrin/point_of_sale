@@ -15,7 +15,7 @@ class CustomerScreen extends StatefulWidget {
 }
 
 class _CustomerScreenState extends State<CustomerScreen> {
-  FirebaseServices _services = FirebaseServices();
+  final FirebaseServices _services = FirebaseServices();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     children: [
                       SizedBox(
                           height: 180,
-                          child: Image.asset('images/customerEmpty.png')
+                          child: Image.asset('images/EmptyCustomer.png')
                       ),
                       SizedBox(height: 15,),
                       Text('Berlum ada Customer!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),

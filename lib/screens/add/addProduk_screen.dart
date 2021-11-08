@@ -314,11 +314,6 @@ class _AddProdukDataState extends State<AddProdukData> {
                                 absorbing: true,
                                 child: TextFormField(
                                   controller: _categoryTextController,
-                                  validator: (value){
-                                    if(value!.isEmpty){
-                                      return 'pilih kategory barang';
-                                    }
-                                  },
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -327,7 +322,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.zero,
                                     prefixIcon: Icon(Icons.category_outlined,),
-                                    labelText: 'Category*',
+                                    labelText: 'Category',
                                     labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
                                   ),
                                 ),
@@ -461,6 +456,7 @@ class _AddProdukDataState extends State<AddProdukData> {
               if(url != null){
                 Navigator.pushReplacementNamed(context, ProdukScreen.id);
                 EasyLoading.dismiss();
+                _formKey.currentState!.reset();
                 _authData.saveProdukDataToDb(
                   context: context,
                   namaProduk: namaProduk,

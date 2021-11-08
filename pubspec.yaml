@@ -26,6 +26,8 @@ dependencies:
   ars_progress_dialog: 0.1.2
   image_picker: ^0.8.4+4
   flutter_easyloading: ^3.0.3
+  otp_text_field: ^1.1.1
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

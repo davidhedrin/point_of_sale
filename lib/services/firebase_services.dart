@@ -14,4 +14,7 @@ class FirebaseServices{
   CollectionReference suplier = FirebaseFirestore.instance.collection('supliers');
 
   CollectionReference customer = FirebaseFirestore.instance.collection('customers');
+
+  CollectionReference produk = FirebaseFirestore.instance.collection('produks');
+
 }

@@ -167,7 +167,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                               return 'lengkapi nomor hp';
                             }
                             setState(() {
-                              mobileSuplier = '0' + value;
+                              mobileSuplier = '+62' + value;
                             });
                             return null;
                           },
@@ -322,22 +322,15 @@ class _AddSuplierDataState extends State<AddSuplierData> {
         CupertinoDialogAction(
           child: Text('iya'),
           onPressed: (){
-            EasyLoading.show(status: 'Menyimpan...');
-            if(namaSuplier != null){
-              Navigator.pushReplacementNamed(context, SuplierScreen.id);
-              EasyLoading.dismiss();
-              _authData.saveSuplierDataToDb(
-                context: context,
-                namaSuplier: namaSuplier,
-                emailSuplier: _emailTextController.text,
-                noHpSuplier: mobileSuplier,
-                alamatSuplier: alamatSuplier,
-                komentar: _ketSuplierTextController.text,
-              );
-            }else{
-              Navigator.pop(context);
-              EasyLoading.showError('Gagal menyimapan');
-            }
+            Navigator.pushReplacementNamed(context, SuplierScreen.id);
+            _authData.saveSuplierDataToDb(
+              context: context,
+              namaSuplier: namaSuplier,
+              emailSuplier: _emailTextController.text,
+              noHpSuplier: mobileSuplier,
+              alamatSuplier: alamatSuplier,
+              komentar: _ketSuplierTextController.text,
+            );
           },
         ),
       ],

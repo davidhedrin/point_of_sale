@@ -2,6 +2,8 @@ import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
+import 'package:point_of_sale/screens/register_admin_screen.dart';
+import 'package:point_of_sale/screens/reset_pw_admin_screen.dart';
 import 'package:point_of_sale/services/firebase_services.dart';
 
 
@@ -212,7 +214,7 @@ class _Login2ScreenState extends State<Login2Screen> {
                           Text('ingin menambahan admin? ', style: TextStyle(color: Colors.grey),),
                           InkWell(
                             onTap: (){
-                              Navigator.pushNamed(context, RegisterScreen.id);
+                              Navigator.pushNamed(context, RegisterAdminScreen.id);
                             },
                             child: Text(
                               'Tambahkan Admin!',
@@ -245,10 +247,7 @@ class _Login2ScreenState extends State<Login2Screen> {
                               ),
                               onPressed: (){
                                 if(_formKey.currentState!.validate()){
-                                  _login( 
-                                    // username: _usernameTextController.text,
-                                    // password: _passwordTextController.text,
-                                  );
+                                  _login();
                                 }
                               },
                             ),
@@ -256,12 +255,12 @@ class _Login2ScreenState extends State<Login2Screen> {
                         ],
                       ),
                       SizedBox(height: 7,),
-                      /*Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: (){
-                              Navigator.pushNamed(context, ResetPassword.id);
+                              Navigator.pushNamed(context, ResetPasswordAdmin.id);
                             },
                             child: Text(
                               'lupa password?',
@@ -269,7 +268,7 @@ class _Login2ScreenState extends State<Login2Screen> {
                             ),
                           ),
                         ],
-                      ),*/
+                      ),
                     ],
                   ),
                 ),

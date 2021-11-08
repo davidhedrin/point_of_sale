@@ -63,7 +63,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       children: [
                         SizedBox(
                           height: 230,
-                          child: Image.asset('images/categoryEmpty.png')
+                          child: Image.asset('images/EmptyCategory.png')
                         ),
                         SizedBox(height: 15,),
                         Text('Berlum ada Category!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),

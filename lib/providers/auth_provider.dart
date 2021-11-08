@@ -18,22 +18,20 @@ class AuthProvider extends ChangeNotifier{
   String pickerError = '';
   bool isPickAvail = false;
 
-  String selectedCategory = 'belum dipilih';
-  String selectedSuplier = 'belum dipilih';
+  String selectedCategory = '';
+  late String id_Suplier, selectedSuplier;
 
   selectCategory(selected){
     this.selectedCategory = selected;
     notifyListeners();
   }
-  selectSuplier(selected){
+  selectSuplier(selected, id_Suplier){
     this.selectedSuplier = selected;
+    this.id_Suplier = id_Suplier;
     notifyListeners();
   }
-/*  getNamaProduk(namaProduk){
-    this.namaProduk = namaProduk;
-    notifyListeners();
-  }*/
 
+  //register admin email
   Future<UserCredential> registerAdmin(email, password) async {
     late UserCredential userCredential;
     try {
@@ -57,9 +55,8 @@ class AuthProvider extends ChangeNotifier{
     }
     return userCredential;
   }
-
-  //login admin
-  Future<UserCredential?> loginVendor(email, password) async {
+  //login admin email
+  Future<UserCredential?> loginAdmin(email, password) async {
     this.email = email;
     notifyListeners();
     UserCredential? userCredential;
@@ -79,8 +76,7 @@ class AuthProvider extends ChangeNotifier{
     }
     return userCredential;
   }
-
-  //reset password
+  //reset password email
   Future<void> resetPassword(email) async {
     this.email = email;
     notifyListeners();
@@ -187,7 +183,7 @@ class AuthProvider extends ChangeNotifier{
     try{
       _produk.doc(timeStamp.toString()).set({
         'id_produk' : timeStamp.toString(),
-        'suplier_produk' : this.selectedSuplier,
+        'suplier_produk' : {'nama_suplier' : this.selectedSuplier, 'id_suplier' : this.id_Suplier},
         'nama_produk' : namaProduk,
         'category_produk' : this.selectedCategory,
         'harga_produk' :  hargaProduk,
