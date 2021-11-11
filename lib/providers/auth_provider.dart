@@ -14,20 +14,29 @@ import 'package:point_of_sale/screens/add/addSuplier_screen.dart';
 class AuthProvider extends ChangeNotifier{
   String error = '';
   String email = '';
-  late File image;
-  String pickerError = '';
   bool isPickAvail = false;
 
-  String selectedCategory = '';
-  late String id_Suplier, selectedSuplier;
+  late File image;
+  String pickerError = '';
+  String? id_Category, selectedCategory;
+  String? id_Suplier, selectedSuplier;
 
-  selectCategory(selected){
+  selectCategory(selected, id_Category){
     this.selectedCategory = selected;
+    this.id_Category = id_Category;
     notifyListeners();
   }
   selectSuplier(selected, id_Suplier){
     this.selectedSuplier = selected;
     this.id_Suplier = id_Suplier;
+    notifyListeners();
+  }
+
+  removeProvider(){
+    this.id_Category=null;
+    this.selectedCategory=null;
+    this.id_Suplier=null;
+    this.selectedSuplier=null;
     notifyListeners();
   }
 
@@ -165,13 +174,13 @@ class AuthProvider extends ChangeNotifier{
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
 
     try {
-      await _storage.ref('produkImage/-$namaProduk$timeStamp').putFile(file);
+      await _storage.ref('produkImage/$namaProduk$timeStamp').putFile(file);
     } on FirebaseException catch (e) {
       // e.g, e.code == 'canceled'
       print(e.code);
     }
     //upload url link to database
-    String downloadURL = await _storage.ref('produkImage/-$namaProduk$timeStamp').getDownloadURL();
+    String downloadURL = await _storage.ref('produkImage/$namaProduk$timeStamp').getDownloadURL();
 
     return downloadURL;
   }
@@ -181,11 +190,11 @@ class AuthProvider extends ChangeNotifier{
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
     CollectionReference _produk = FirebaseFirestore.instance.collection('produks');
     try{
-      _produk.doc(timeStamp.toString()).set({
-        'id_produk' : timeStamp.toString(),
+      _produk.doc('PO-'+timeStamp.toString()).set({
+        'id_produk' : 'PO-'+timeStamp.toString(),
         'suplier_produk' : {'nama_suplier' : this.selectedSuplier, 'id_suplier' : this.id_Suplier},
         'nama_produk' : namaProduk,
-        'category_produk' : this.selectedCategory,
+        'category_produk' : {'nama_category' : this.selectedCategory, 'id_category' : this.id_Category},
         'harga_produk' :  hargaProduk,
         'kode_produk' : codeProduk,
         'stok_produk' : stokProduk,
@@ -198,6 +207,27 @@ class AuthProvider extends ChangeNotifier{
         title: 'Simpan Produk',
         content: 'Produk baru berhasil ditambahkan',
       );
+    }catch(e){
+      this.alertDialog(
+        context: context,
+        title: 'Simpan Produk',
+        content: '${e.toString()}',
+      );
+    }
+    return null;
+  }
+  Future<void>? updateProdukDataToDb({idProduk, image, namaProduk, hargaProduk, stokProduk, ketProduk, context, namaSupProduk, idSup, namaCatProduk, idCat}){
+    CollectionReference _produk = FirebaseFirestore.instance.collection('produks');
+    try{
+      _produk.doc(idProduk).update({
+        'suplier_produk' : {'nama_suplier' : this.selectedSuplier == null ? namaSupProduk : this.selectedSuplier, 'id_suplier' : this.id_Suplier == null ? idSup : this.id_Suplier},
+        'nama_produk' : namaProduk,
+        'category_produk' : {'nama_category' : this.selectedCategory == null ? namaCatProduk : this.selectedCategory, 'id_category' : this.id_Category == null ? idCat : this.id_Category},
+        'harga_produk' :  hargaProduk,
+        'stok_produk' : stokProduk,
+        'ket_produk' : ketProduk,
+        'imageUrl' : image,
+      });
     }catch(e){
       this.alertDialog(
         context: context,
@@ -246,6 +276,24 @@ class AuthProvider extends ChangeNotifier{
       );
     }
   }
+  Future<void>? updateSuplierDataToDb({namaSuplier, emailSuplier, noHpSuplier, alamatSuplier, komentar, context, suplierId}){
+    CollectionReference _suplierUpdate = FirebaseFirestore.instance.collection('supliers');
+    try{
+      _suplierUpdate.doc(suplierId).update({
+        'nama_suplier' : namaSuplier,
+        'email_suplier' : emailSuplier,
+        'no_handpone' : noHpSuplier,
+        'alamat_suplier' : alamatSuplier,
+        'komentar' : komentar
+      });
+    }catch(e){
+      this.alertDialog(
+        context: context,
+        title: 'Update Customer',
+        content: '${e.toString()}',
+      );
+    }
+  }
   alertDialogSuplier({context, title, content}){
     showCupertinoDialog(context: context, builder: (BuildContext context){
       return CupertinoAlertDialog(
@@ -268,7 +316,7 @@ class AuthProvider extends ChangeNotifier{
         'id_customer' : 'COS-'+timeStamp.toString(),
         'nama_customer' : namaCustomer,
         'email_customer' : emailCustomer,
-        'no_handpone' : '+62'+noHpCustomer,
+        'no_handpone' : noHpCustomer,
         'alamat_customer' : alamatCustomer,
       });
       this.alertDialogCustomer(
@@ -280,6 +328,23 @@ class AuthProvider extends ChangeNotifier{
       this.alertDialog(
         context: context,
         title: 'Simpan Customer',
+        content: '${e.toString()}',
+      );
+    }
+  }
+  Future<void>? updateCustomerDataToDb({namaCustomer, emailCustomer, noHpCustomer, alamatCustomer, context, customerId}){
+    CollectionReference _customerUpdate = FirebaseFirestore.instance.collection('customers');
+    try{
+      _customerUpdate.doc(customerId).update({
+        'nama_customer' : namaCustomer,
+        'email_customer' : emailCustomer,
+        'no_handpone' : noHpCustomer,
+        'alamat_customer' : alamatCustomer,
+      });
+    }catch(e){
+      this.alertDialog(
+        context: context,
+        title: 'Update Customer',
         content: '${e.toString()}',
       );
     }

@@ -91,6 +91,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan nama customer';
@@ -117,6 +118,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
                           controller: _emailTextController,
+                          autofocus: false,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value){
                             if(value!.isEmpty){
@@ -147,6 +149,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           keyboardType: TextInputType.phone,
                           maxLength: 11,
                           validator: (value){
@@ -179,6 +182,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan alamat customer';

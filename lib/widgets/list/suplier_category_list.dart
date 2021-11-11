@@ -62,7 +62,7 @@ class _CategoryListState extends State<CategoryList> {
                       ),
                       title: Text((document.data()! as dynamic)['category']),
                       onTap: (){
-                        _provider.selectCategory((document.data()! as dynamic)['category']);
+                        _provider.selectCategory((document.data()! as dynamic)['category'], (document.data()! as dynamic)['category_id']);
                         Navigator.pop(context);
                       },
                     );

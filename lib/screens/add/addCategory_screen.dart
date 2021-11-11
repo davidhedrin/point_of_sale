@@ -29,13 +29,13 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     FirebaseStorage _storage = FirebaseStorage.instance;
 
     try {
-      await _storage.ref('uploads/categoryPicture/${_categoryTextController.text}').putFile(file);
+      await _storage.ref('categoryPicture/${_categoryTextController.text}').putFile(file);
     } on FirebaseException catch (e) {
       // e.g, e.code == 'canceled'
       print(e.code);
     }
     //upload url link to database
-    String downloadURL = await _storage.ref('uploads/categoryPicture/${_categoryTextController.text}').getDownloadURL();
+    String downloadURL = await _storage.ref('categoryPicture/${_categoryTextController.text}').getDownloadURL();
 
     return downloadURL;
   }
@@ -127,6 +127,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                           padding: const EdgeInsets.all(3.0),
                           child: TextFormField(
                             controller: _categoryTextController,
+                            autofocus: false,
                             validator: (value){
                               if(value!.isEmpty){
                                 return 'masukkan category';

@@ -95,6 +95,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan nama suplier';
@@ -123,6 +124,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           controller: _emailTextController,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value){
@@ -157,6 +159,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           keyboardType: TextInputType.phone,
                           maxLength: 11,
                           validator: (value){
@@ -167,7 +170,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                               return 'lengkapi nomor hp';
                             }
                             setState(() {
-                              mobileSuplier = '+62' + value;
+                              mobileSuplier = value;
                             });
                             return null;
                           },
@@ -192,6 +195,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan alamat suplier';
@@ -222,6 +226,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           controller: _ketSuplierTextController,
                           validator: (value){
                             return null;

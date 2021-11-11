@@ -8,6 +8,7 @@ import 'package:point_of_sale/screens/add/addPosCart_screen.dart';
 import 'package:point_of_sale/screens/add/addProduk_screen.dart';
 import 'package:point_of_sale/screens/add/addSuplier_screen.dart';
 import 'package:point_of_sale/screens/customer_screen.dart';
+import 'package:point_of_sale/screens/details/customer_detail_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
 import 'package:point_of_sale/screens/category_screen.dart';
 import 'package:point_of_sale/screens/login2_screen.dart';
@@ -33,7 +34,6 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-
       ],
       child: MyApp(),
     ),);

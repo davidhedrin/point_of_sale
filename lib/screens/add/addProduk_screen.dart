@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
 import 'package:point_of_sale/providers/auth_provider.dart';
 import 'package:point_of_sale/screens/produk_screen.dart';
 import 'package:point_of_sale/widgets/list/suplier_category_list.dart';
@@ -20,14 +22,6 @@ class AddProdukData extends StatefulWidget {
 class _AddProdukDataState extends State<AddProdukData> {
   final _formKey = GlobalKey<FormState>();
   File? _image;
-
-/*  List<String> _dropdownItems = [
-    'Savings',
-    'Deposit',
-    'Checking',
-    'Brokerage'
-  ];
-  late String dropdownValue;*/
 
   var _categoryTextController = TextEditingController();
   var _ketProdukTextController = TextEditingController();
@@ -148,6 +142,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                                 absorbing: true,
                                 child: TextFormField(
                                   controller: _suplierTextController,
+                                  autofocus: false,
                                   validator: (value){
                                     if(value!.isEmpty){
                                       return 'pilih suplier barang';
@@ -175,7 +170,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                                     return SuplierList();
                                   },
                                 ).whenComplete((){
-                                  _suplierTextController.text = _authData.selectedSuplier;
+                                  _suplierTextController.text = _authData.selectedSuplier!;
                                 });
                               },
                               icon: Icon(Icons.arrow_drop_down, color: Colors.grey[700],),
@@ -189,6 +184,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan nama ikan';
@@ -217,6 +213,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan kode produk';
@@ -245,6 +242,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan harga ikan';
@@ -277,6 +275,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           validator: (value){
                             if(value!.isEmpty){
                               return 'masukkan stok ikan';
@@ -313,6 +312,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                               child: AbsorbPointer(
                                 absorbing: true,
                                 child: TextFormField(
+                                  autofocus: false,
                                   controller: _categoryTextController,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -336,7 +336,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                                     return CategoryList();
                                   },
                                 ).whenComplete((){
-                                  _categoryTextController.text = _authData.selectedCategory;
+                                  _categoryTextController.text = _authData.selectedCategory!;
                                 });
                               },
                               icon: Icon(Icons.arrow_drop_down, color: Colors.grey[700],),
@@ -350,6 +350,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
+                          autofocus: false,
                           controller: _ketProdukTextController,
                           style: TextStyle(
                             color: Colors.white,

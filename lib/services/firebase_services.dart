@@ -4,6 +4,7 @@ class FirebaseServices{
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+
   Future<QuerySnapshot>getAdminCredentials(){
     var result = FirebaseFirestore.instance.collection('admin').get();
     return result;
@@ -16,5 +17,4 @@ class FirebaseServices{
   CollectionReference customer = FirebaseFirestore.instance.collection('customers');
 
   CollectionReference produk = FirebaseFirestore.instance.collection('produks');
-
 }
