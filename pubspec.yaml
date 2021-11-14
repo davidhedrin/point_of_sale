@@ -28,6 +28,7 @@ dependencies:
   flutter_easyloading: ^3.0.3
   otp_text_field: ^1.1.1
   intl: ^0.17.0
+  material_floating_search_bar: ^0.3.6
 
 dev_dependencies:
   flutter_test:

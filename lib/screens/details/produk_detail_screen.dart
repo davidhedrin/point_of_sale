@@ -90,7 +90,6 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
                         if(snapshot.connectionState == ConnectionState.waiting){
                           return Center(child: CircularProgressIndicator(),);
                         }
-                        var data = snapshot.data!.data();
                         return Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(

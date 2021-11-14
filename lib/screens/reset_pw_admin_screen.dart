@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:point_of_sale/services/firebase_services.dart';
 import 'package:point_of_sale/services/phone_auth_service.dart';
-import 'package:provider/provider.dart';
 
 class ResetPasswordAdmin extends StatefulWidget {
   const ResetPasswordAdmin({Key? key}) : super(key: key);
@@ -34,14 +32,13 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
 
   FirebaseServices _services = FirebaseServices();
 
-
-
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: Color(0xff363636),
         centerTitle: true,
         elevation: 0.0,
         leading: IconButton(
@@ -86,6 +83,9 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
                       if(value!.isEmpty){
                         return 'masukkan nomor';
                       }
+                      setState(() {
+                        _phoneNumberController.text = value;
+                      });
                     },
                     controller: _phoneNumberController,
                     keyboardType: TextInputType.phone,
@@ -107,7 +107,7 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
                             EasyLoading.show(status: 'Meminta...');
                             _services.getAdminCredentials().then((value){
                               value.docs.forEach((doc) async {
-                                if(doc.get('number') == phoneNumber){
+                                if(doc.get('no_hp') == phoneNumber){
                                   isVisible = true;
                                   EasyLoading.dismiss();
                                   await authClass.verifyPhoneNumber(phoneNumber = phoneNumber, context, setData);
@@ -119,19 +119,10 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
                                   });
                                 }else{
                                   EasyLoading.dismiss();
-                                  authClass.showSnackBar(context, 'Nomor telepon tidak ditemukan');
+                                  authClass.showSnackBar(context, 'Nomor salah');
                                 }
                               });
                             });
-
-                            /*String phoneNumber = '+62${_phoneNumberController.text}';
-                            await authClass.verifyPhoneNumber(phoneNumber = phoneNumber, context, setData);
-                            startTimer();
-                            setState(() {
-                              start = 30;
-                              wait = true;
-                              bottomName = 'Ulang';
-                            });*/
                           }
                         },
                         child: Padding(
@@ -249,29 +240,21 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 13.0, horizontal: 18.0),
-                  onPressed: () async {
+                  onPressed: (){
+                    String phoneNumber2 = '+62${_phoneNumberController.text}';
                     if(kodeOtp.length == 6){
-                      await authClass.signInWithPhoneNumber(
+                      authClass.signInWithPhoneNumber(
                         verificationId_Final,
                         kodeOtp,
                         context,
                       );
+                      authClass.getKonfirmNoHp(phoneNumber2);
                     }else{
                       authClass.showSnackBar(
                         context,
                         'Masukkan 6 digit OTP',
                       );
                     }
-
-                    /*if(_formKey.currentState!.validate()){
-                      String number = '+62${_phoneNumberController.text}';
-                      _auth.verifyPhoneResetPass(
-                        context: context,
-                        number: number,
-                      ).then((value){
-                        _phoneNumberController.clear();
-                      });
-                    }*/
                   },
                   color: Theme.of(context).primaryColor,
                   child:Text('Verifikasi', style: TextStyle(color: Colors.white, fontSize: 17),),
@@ -282,120 +265,6 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
         ),
       ),
     );
-
-    // final _auth = Provider.of<PhoneProvider>(context);
-    // final _formKey = GlobalKey<FormState>();
-    //
-    // return SafeArea(
-    //   child: Scaffold(
-    //     appBar: AppBar(
-    //       backgroundColor: Colors.white,
-    //       centerTitle: true,
-    //       elevation: 0.0,
-    //       leading: IconButton(
-    //         icon: Icon(Icons.arrow_back_ios),
-    //         color: Colors.black,
-    //         onPressed: () => Navigator.of(context).pop(),
-    //       ),
-    //       title: Text('Reset Password', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),
-    //     ),
-    //     body: Container(
-    //       /*decoration: BoxDecoration(
-    //         image: DecorationImage(
-    //           image: AssetImage('images/bg_login.jpg'),
-    //           fit: BoxFit.cover,
-    //           colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.7), BlendMode.darken),
-    //         ),
-    //       ),*/
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         children: <Widget> [
-    //           Form(
-    //             key: _formKey,
-    //             child: Center(
-    //               child: Padding(
-    //                 padding: const EdgeInsets.all(20.0),
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   children: [
-    //                     Image.asset('images/reset-pass.png', height: 150,),
-    //                     SizedBox(height: 10,),
-    //                     RichText(text: TextSpan(
-    //                       text: '',
-    //                       children: [
-    //                         TextSpan(text: 'Lupa Password? \n', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 30)),
-    //                         TextSpan(text: 'Kode OTP reset password akan dikirim melalui no telepon.', style: TextStyle(color: Colors.black, fontSize: 15)),
-    //                       ],
-    //                     ), textAlign: TextAlign.center,),
-    //                     SizedBox(height: 10,),
-    //                     Padding(
-    //                       padding: const EdgeInsets.all(3.0),
-    //                       child: TextFormField(
-    //                         controller: _phoneNumberController,
-    //                         keyboardType: TextInputType.phone,
-    //                         maxLength: 11,
-    //                         validator: (value){
-    //                           if(value!.isEmpty){
-    //                             return 'masukkan nomor hp';
-    //                           }
-    //                           if(value.length<11){
-    //                             return 'lengkapi nomor hp';
-    //                           }
-    //                           return null;
-    //                         },
-    //                         style: TextStyle(
-    //                           color: Colors.black,
-    //                           fontWeight: FontWeight.bold,
-    //                           fontSize: 20,
-    //                         ),
-    //                         decoration: InputDecoration(
-    //                           contentPadding: EdgeInsets.zero,
-    //                           prefixText: '+62 ',
-    //                           hintStyle: TextStyle(color: Colors.black54),
-    //                           prefixIcon: Icon(Icons.phone_android,),
-    //                           labelText: '*no telepon',
-    //                           labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     SizedBox(height: 15,),
-    //                     Row(
-    //                       children: [
-    //                         Expanded(
-    //                           // ignore: deprecated_member_use
-    //                           child: FlatButton(
-    //                             shape: RoundedRectangleBorder(
-    //                               borderRadius: BorderRadius.circular(15.0),
-    //                             ),
-    //                             padding: EdgeInsets.symmetric(vertical: 15.0),
-    //                             onPressed: (){
-    //                               EasyLoading.show(status: 'Meminta...');
-    //                               if(_formKey.currentState!.validate()){
-    //                                 String number = '+62${_phoneNumberController.text}';
-    //                                 _auth.verifyPhoneResetPass(
-    //                                   context: context,
-    //                                   number: number,
-    //                                 ).then((value){
-    //                                   _phoneNumberController.clear();
-    //                                 });
-    //                               }
-    //                             },
-    //                             color: Theme.of(context).primaryColor,
-    //                             child:Text('Send OTP', style: TextStyle(color: Colors.white),),
-    //                           ),
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   void startTimer(){

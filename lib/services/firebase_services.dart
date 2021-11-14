@@ -9,7 +9,9 @@ class FirebaseServices{
     var result = FirebaseFirestore.instance.collection('admin').get();
     return result;
   }
-  
+
+  CollectionReference admin = FirebaseFirestore.instance.collection('admin');
+
   CollectionReference category = FirebaseFirestore.instance.collection('categorys');
 
   CollectionReference suplier = FirebaseFirestore.instance.collection('supliers');

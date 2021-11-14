@@ -35,50 +35,6 @@ class _Login2ScreenState extends State<Login2Screen> {
         animationDuration: Duration(milliseconds: 500)
     );
 
-    /*_login({username, password}) async {
-      progressDialog.show();
-      _services.getAdminCredentials(username).then((value) async {
-        if(value.exists){
-          if((value.data() as dynamic)['username'] == username){
-            if((value.data() as dynamic)['password'] == password){
-              try{
-                UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
-                if(userCredential != null ){
-                  progressDialog.dismiss();
-                  Navigator.pushReplacementNamed(context, HomeScreen.id);
-                }
-              }catch(e){
-                progressDialog.dismiss();
-                _showMyDialog(
-                  tittle: 'Login',
-                  message: '${e.toString()}',
-                );
-              }
-              return;
-            }else{
-              progressDialog.dismiss();
-              _showMyDialog(
-                tittle: 'Password salah',
-                message: 'Masukkan password yang benar',
-              );
-            }
-            return;
-          }else{
-            progressDialog.dismiss();
-            _showMyDialog(
-              tittle: 'Username salah',
-              message: 'Masukkan username yang benar',
-            );
-          }
-        }else{
-          progressDialog.dismiss();
-          _showMyDialog(
-            tittle: 'Username salah',
-            message: 'Masukkan username yang benar',
-          );
-        }
-      });
-    }*/
 
     Future<void> _login() async {
       progressDialog.show();
@@ -223,8 +179,9 @@ class _Login2ScreenState extends State<Login2Screen> {
                             ),
                           ),
                         ],
-                      ),*/
-                      SizedBox(height: 10,),
+                      ),
+                      SizedBox(height: 10,),*/
+
                       Row(
                         children: [
                           Expanded(
@@ -243,6 +200,7 @@ class _Login2ScreenState extends State<Login2Screen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
+                                    fontSize: 17
                                 ),
                               ),
                               onPressed: (){
