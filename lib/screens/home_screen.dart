@@ -16,10 +16,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
+  bool isVisible = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xff363636),
         drawer: NavigationDrawerWidget(),
         appBar: CustomAppBar(),
         body: bodyPages(),
@@ -48,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCornerRadius: 20,
       onItemSelected: (index) => setState(() => this.index = index),
       items: <BottomNavyBarItem>[
-        BottomNavyBarItem(icon: Icon(Icons.home_filled, size: 34,), activeColor: Color(0xff363636), title: Text('Beranda'), textAlign: TextAlign.center,),
-        BottomNavyBarItem(icon: Icon(Icons.settings, size: 34,), activeColor: Color(0xff363636), title: Text('Akun'), textAlign: TextAlign.center,),
+        BottomNavyBarItem(icon: Icon(Icons.home_filled, size: 30,), activeColor: Color(0xff363636), title: Text('Beranda'), textAlign: TextAlign.center,),
+        BottomNavyBarItem(icon: Icon(Icons.settings, size: 30,), activeColor: Color(0xff363636), title: Text('Pengaturan'), textAlign: TextAlign.center,),
       ],
     );
   }

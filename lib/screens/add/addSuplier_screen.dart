@@ -327,6 +327,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
         CupertinoDialogAction(
           child: Text('iya'),
           onPressed: (){
+            EasyLoading.show(status: 'Menyimpan...');
             Navigator.pushReplacementNamed(context, SuplierScreen.id);
             _authData.saveSuplierDataToDb(
               context: context,
@@ -335,7 +336,9 @@ class _AddSuplierDataState extends State<AddSuplierData> {
               noHpSuplier: mobileSuplier,
               alamatSuplier: alamatSuplier,
               komentar: _ketSuplierTextController.text,
-            );
+            ).then((value){
+              EasyLoading.dismiss();
+            });
           },
         ),
       ],

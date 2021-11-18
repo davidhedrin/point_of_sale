@@ -20,6 +20,7 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Color(0xff363636),
       body: Stack(
         children: <Widget> [
           //header POS Pokdakan PT. Pokdakan

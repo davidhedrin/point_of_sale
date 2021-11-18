@@ -283,15 +283,17 @@ class _AddCustomerDataState extends State<AddCustomerData> {
         CupertinoDialogAction(
           child: Text('iya'),
           onPressed: (){
+            EasyLoading.show(status: 'Menyimpan...');
             Navigator.pushReplacementNamed(context, CustomerScreen.id);
-            EasyLoading.dismiss();
             _authData.saveCustomerDataToDb(
               context: context,
               namaCustomer: namaCustomer,
               emailCustomer: _emailTextController.text,
               noHpCustomer: mobileCustomer,
               alamatCustomer: alamatCustomer,
-            );
+            ).then((value){
+              EasyLoading.dismiss();
+            });
           },
         ),
       ],

@@ -21,7 +21,6 @@ class AddCategoryScreen extends StatefulWidget {
 class _AddCategoryScreenState extends State<AddCategoryScreen> {
   final _formKey = GlobalKey<FormState>();
   var _categoryTextController = TextEditingController();
-  late String categoryName;
 
   //kalau punya image
   Future<String> uploadFile(filePath) async {
@@ -239,6 +238,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   url: url,
                   category: _categoryTextController.text,
                 );
+                _authData.isPickAvail = false;
               }else{
                 Navigator.pop(context);
                 EasyLoading.showError('Gagal menyimapan');

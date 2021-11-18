@@ -251,7 +251,7 @@ class AuthProvider extends ChangeNotifier{
   }
 
   //save suplier to database
-  Future<void>? saveSuplierDataToDb({namaSuplier, emailSuplier, noHpSuplier, alamatSuplier, komentar, context}){
+  Future<void> saveSuplierDataToDb({namaSuplier, emailSuplier, noHpSuplier, alamatSuplier, komentar, context}) async {
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
     CollectionReference _suplier = FirebaseFirestore.instance.collection('supliers');
     try{
@@ -308,7 +308,7 @@ class AuthProvider extends ChangeNotifier{
   }
 
   //save customer to database
-  Future<void>? saveCustomerDataToDb({namaCustomer, emailCustomer, noHpCustomer, alamatCustomer, context}){
+  Future<void> saveCustomerDataToDb({namaCustomer, emailCustomer, noHpCustomer, alamatCustomer, context}) async {
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
     CollectionReference _customer = FirebaseFirestore.instance.collection('customers');
     try{

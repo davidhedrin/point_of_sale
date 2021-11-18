@@ -117,7 +117,7 @@ class _Login2ScreenState extends State<Login2Screen> {
                           hintText: 'Username',
                           fillColor: Colors.white.withOpacity(0.5),
                           filled: true,
-                          prefixIcon: Icon(Icons.email, color: Colors.black,),
+                          prefixIcon: Icon(Icons.account_circle_outlined, color: Colors.black,),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),

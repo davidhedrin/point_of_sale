@@ -19,8 +19,24 @@ class ProdukScreen extends StatefulWidget {
 }
 
 class _ProdukScreenState extends State<ProdukScreen> {
-  final numbers = List.generate(100, (index) => '$index');
   final FirebaseServices _services = FirebaseServices();
+
+  late TextEditingController _searchTextController;
+  late String searchKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchTextController = TextEditingController();
+    _searchTextController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  void dispose(){
+    super.dispose();
+    _searchTextController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +68,12 @@ class _ProdukScreenState extends State<ProdukScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 15.0, left: 15.0, top: 5.0),
                 child: TextField(
+                  controller: _searchTextController,
+                  onChanged: (value){
+                    setState(() {
+                      searchKey = value;
+                    });
+                  },
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -63,11 +85,14 @@ class _ProdukScreenState extends State<ProdukScreen> {
                       hintStyle: TextStyle(color: Colors.white60),
                       fillColor: Colors.white.withOpacity(0.5),
                       filled: true,
-                      suffixIcon: InkWell(
-                          onTap: (){
-                            EasyLoading.showInfo('Yes');
-                          },
-                          child: Icon(Icons.search, color: Colors.white,)
+                      suffixIcon: _searchTextController.text.isEmpty ? IconButton(
+                        onPressed: (){},
+                        icon: Icon(Icons.search, color: Colors.white70,),
+                      ) : IconButton(
+                        icon: Icon(Icons.clear, color: Colors.red,),
+                        onPressed: (){
+                          _searchTextController.clear();
+                        },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(13.0),
@@ -79,7 +104,9 @@ class _ProdukScreenState extends State<ProdukScreen> {
           ),
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: _services.produk.snapshots(),
+          stream: _searchTextController.text.isEmpty ? _services.produk.snapshots() :
+          _services.produk.where('nama_produk', isGreaterThanOrEqualTo: searchKey).
+          where('nama_produk', isLessThan: searchKey + 'z').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
             if(snapshot.hasError){
               return Text('Terjadi kesalahan');
@@ -104,104 +131,147 @@ class _ProdukScreenState extends State<ProdukScreen> {
             }else{
               return Container(
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 20.0, left: 20.0),
-                  child: GridView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 20.0,
-                      crossAxisSpacing: 20.0,
-                      childAspectRatio: 0.8,
-                    ),
-                    itemBuilder: (context, index){
+                  padding: const EdgeInsets.only(right: 10.0, left: 10.0),
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.9,
+                    children: snapshot.data!.docs.map((DocumentSnapshot doc){
                       return InkWell(
                         onTap: (){
                           Navigator.push(
                             context, MaterialPageRoute(
-                              builder: (context){
-                                return ProdukDetailScreen(
-                                  idProduk: snapshot.data!.docs[index].get('id_produk'),
-                                  namaProduk: snapshot.data!.docs[index].get('nama_produk'),
-                                );
-                              },
-                            ),
+                            builder: (context){
+                              return ProdukDetailScreen(
+                                idProduk: (doc.data()! as dynamic)['id_produk'],
+                                namaProduk: (doc.data()! as dynamic)['nama_produk'],
+                              );
+                            },
+                          ),
                           );
                         },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            color: Colors.black45,
-                            child: GridTile(
-                              header: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.delete_forever_sharp, color: Colors.red,),
-                                    onPressed: (){
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context){
-                                          return CupertinoAlertDialog(
-                                            title: Text('Hapus Produk!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                            content: Text('Yakin ingin menghapus Produk ${snapshot.data!.docs[index].get('nama_produk')}', style: TextStyle(fontSize: 18,),),
-                                            actions: [
-                                              CupertinoDialogAction(
-                                                child: Text('Batal'),
-                                                onPressed: (){Navigator.of(context).pop();},
-                                              ),
-                                              CupertinoDialogAction(
-                                                child: Text('Iya'),
-                                                onPressed: (){
-                                                  EasyLoading.showSuccess('Dihapus');
-                                                  Navigator.of(context).pop();
-                                                  _services.produk.doc(snapshot.data!.docs[index].get('id_produk')).delete();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(height: 15.0,),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                                    child: Image.network(snapshot.data!.docs[index].get('imageUrl'), width: 90,),
-                                  ),
-                                  SizedBox(height: 10.0,),
-                                  Text(
-                                    snapshot.data!.docs[index].get('kode_produk'),
-                                    style: TextStyle(color: Colors.white70, fontSize: 13),
-                                  ),
-                                  Text(
-                                    snapshot.data!.docs[index].get('nama_produk'),
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(snapshot.data!.docs[index].get('harga_produk')),
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-                                      ),
-                                      Text('/kg', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),),
-                                    ],
-                                  ),
-                                ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5.0, left: 5.0, top: 10.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              color: Colors.black45,
+                              child: GridTile(
+                                header: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.delete_forever_sharp, color: Colors.red,),
+                                      onPressed: (){
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context){
+                                            return CupertinoAlertDialog(
+                                              title: Text('Hapus Produk!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                              content: Text('Yakin ingin menghapus Produk ${(doc.data()! as dynamic)['nama_produk']}', style: TextStyle(fontSize: 18,),),
+                                              actions: [
+                                                CupertinoDialogAction(
+                                                  child: Text('Batal'),
+                                                  onPressed: (){Navigator.of(context).pop();},
+                                                ),
+                                                CupertinoDialogAction(
+                                                  child: Text('Iya'),
+                                                  onPressed: (){
+                                                    EasyLoading.showSuccess('Dihapus');
+                                                    Navigator.of(context).pop();
+                                                    _services.produk.doc((doc.data()! as dynamic)['id_produk']).delete();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                                      child: Image.network((doc.data()! as dynamic)['imageUrl'], width: 90,),
+                                    ),
+                                    SizedBox(height: 10.0,),
+                                    Text(
+                                      (doc.data()! as dynamic)['category_produk']['nama_category'],
+                                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                                    ),
+                                    Text(
+                                      (doc.data()! as dynamic)['nama_produk'],
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format((doc.data()! as dynamic)['harga_produk']),
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                        ),
+                                        Text('/kg', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       );
-                    },
+                    }).toList(),
                   ),
+
+                  //but produk POS
+                  /*GridView.count(
+                    crossAxisCount: 2,
+                    children: snapshot.data!.docs.map((DocumentSnapshot doc){
+                      return Card(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                        elevation: 6.0,
+                        color: Colors.black38,
+                        child: Stack(
+                          children: <Widget>[
+                            Image.asset('images/produk.png'),
+
+                            //tombol tambah
+                            Container(
+                              margin: EdgeInsets.only(bottom: 0, right: 0),
+                              height: 40,
+                              width: 90,
+                              child: Stack(
+                                children: <Widget>[
+                                  RaisedButton(
+                                    onPressed: (){},
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                    padding: EdgeInsets.all(0.0),
+                                    child:Ink(
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(10.0)
+                                      ),
+                                    )
+                                  ),
+                                  Center(child: Text('Tambah',style: TextStyle(color: Colors.white),))
+                                ],
+                              ),
+                            ),
+
+                            //harga
+                            Container(
+                              margin: EdgeInsets.only(bottom: 0,left: 5),
+                              child: Text('₹449',style: TextStyle(fontSize: 22.0,fontWeight: FontWeight.bold),),
+                            )
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),*/
                 ),
               );
             }

@@ -22,6 +22,23 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   FirebaseServices _services = FirebaseServices();
 
+  late TextEditingController _searchTextController;
+  late String searchKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchTextController = TextEditingController();
+    _searchTextController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  void dispose(){
+    super.dispose();
+    _searchTextController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -51,6 +68,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 15.0, left: 15.0, top: 5.0),
                 child: TextField(
+                  controller: _searchTextController,
+                  onChanged: (value){
+                    setState(() {
+                      searchKey = value;
+                    });
+                  },
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -62,11 +85,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       hintStyle: TextStyle(color: Colors.white60),
                       fillColor: Colors.white.withOpacity(0.5),
                       filled: true,
-                      suffixIcon: InkWell(
-                          onTap: (){
-                            EasyLoading.showInfo('Yes');
-                          },
-                          child: Icon(Icons.search, color: Colors.white,)
+                      suffixIcon: _searchTextController.text.isEmpty ? IconButton(
+                        onPressed: (){},
+                        icon: Icon(Icons.search, color: Colors.white70,),
+                      ) : IconButton(
+                        icon: Icon(Icons.clear, color: Colors.red,),
+                        onPressed: (){
+                          _searchTextController.clear();
+                        },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(13.0),
@@ -78,7 +104,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: _services.category.snapshots(),
+          stream: _searchTextController.text.isEmpty ? _services.category.snapshots() :
+          _services.category.where('category', isGreaterThanOrEqualTo: searchKey).
+          where('category', isLessThan: searchKey + 'z').snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
             if(snapshot.hasError){
               return Text('Terjadi kesalahan');
@@ -93,7 +121,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   children: [
                     SizedBox(
                       height: 230,
-                      child: Image.asset('images/EmptyCategory.png')
+                      child: Image.asset('images/EmptyCategory.png'),
                     ),
                     SizedBox(height: 15,),
                     Text('Berlum ada Category!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
@@ -102,6 +130,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               );
             }else{
               return ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 children: snapshot.data!.docs.map((DocumentSnapshot document){
                   return Container(
                     margin: EdgeInsets.only(bottom: 17, right: 25, left: 25),
@@ -123,7 +153,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           Positioned.fill(//background image
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.fill,),
+                              child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.cover,),
                             ),
                           ),
                           Positioned(
@@ -157,7 +187,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       height: 70,//size gambar
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(50.0),
-                                        child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.fill,),
+                                        child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.cover,),
                                       ),
                                     ),
                                   ),

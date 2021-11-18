@@ -6,21 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:point_of_sale/providers/auth_provider.dart';
-import 'package:point_of_sale/screens/produk_screen.dart';
 import 'package:point_of_sale/services/firebase_services.dart';
+import 'package:point_of_sale/widgets/add_cart/add_to_cart_detail_widget.dart';
 import 'package:point_of_sale/widgets/list/suplier_category_list.dart';
 import 'package:provider/provider.dart';
 
-class ProdukDetailScreen extends StatefulWidget {
-  ProdukDetailScreen({Key? key, this.idProduk, this.namaProduk,}) : super(key: key);
+class POSProdukDetailScreen extends StatefulWidget {
+  POSProdukDetailScreen({Key? key, this.idProduk, this.namaProduk, this.document}) : super(key: key);
   final idProduk, namaProduk;
+  final DocumentSnapshot? document;
 
   @override
-  _ProdukDetailScreenState createState() => _ProdukDetailScreenState();
+  _POSProdukDetailScreenState createState() => _POSProdukDetailScreenState();
 }
 
-class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
+class _POSProdukDetailScreenState extends State<POSProdukDetailScreen> {
   final FirebaseServices _services = FirebaseServices();
+
   final _formKey = GlobalKey<FormState>();
 
   var _namaProdukController = TextEditingController();
@@ -38,6 +40,7 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
   bool _editing = true;
   bool isVisibleEdit = true;
   bool isVisibleSave = false;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -59,6 +62,7 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
           _idcategoryTextController.text = (document.data()! as dynamic)['category_produk']['id_category'];
           _ketProdukTextController.text = (document.data()! as dynamic)['ket_produk'];
           _imgProdukTextController.text = (document.data()! as dynamic)['imageUrl'];
+          _loading = false;
         });
       }
     });
@@ -81,105 +85,84 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
                 children: [
                   SizedBox(
                     height: 180,
-                    child: FutureBuilder<DocumentSnapshot <Map <String, dynamic>>>(
-                      future: _services.firestore.collection('produks').doc(widget.idProduk).get(),
-                      builder: (_, snapshot){
-                        if(snapshot.hasError){
-                          print('Terdapat masalah');
-                        }
-                        if(snapshot.connectionState == ConnectionState.waiting){
-                          return Center(child: CircularProgressIndicator(),);
-                        }
-                        return Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage('${_imgProdukTextController.text}'),
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.darken),
+                    child: _loading ? Container(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                        ),
+                      ),
+                    ) : Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(_imgProdukTextController.text,),
+                          fit: BoxFit.cover,
+                          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.darken),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: Icon(Icons.arrow_back_ios, color: Colors.white,),
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  icon: Icon(Icons.arrow_back_ios, color: Colors.white,),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10.0),
-                                  child: Column(
-                                    children: [
-                                      Text(widget.namaProduk, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25),),
-                                      Text('- '+_kodeProdukTextController.text+' -', style: TextStyle(color: Colors.white, fontSize: 18),),
-                                      SizedBox(height: 15,),
-                                      AbsorbPointer(
-                                        absorbing: _editing,
-                                        child: InkWell(
-                                          onTap: (){
-                                            _authData.getImage().then((image){
-                                              setState(() {
-                                                _image = image;
-                                              });
-                                            });
-                                          },
-                                          child:_image == null ? ClipRRect(
-                                            borderRadius: BorderRadius.all(Radius.circular(100)),
-                                            child: Image.network('${_imgProdukTextController.text}', width: 80,),
-                                          ) : ClipRRect(
-                                            borderRadius: BorderRadius.all(Radius.circular(100)),
-                                            child: Image.file(_image!, width: 80,),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Visibility(
-                                      visible: isVisibleEdit,
-                                      child: IconButton(
-                                          icon: Icon(Icons.edit, color: Colors.green, size: 30,),
-                                          onPressed: (){
-                                            setState(() {
-                                              _editing = false;
-                                              isVisibleEdit = false;
-                                              isVisibleSave = true;
-                                            });
-                                          }
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Column(
+                                children: [
+                                  Text(widget.namaProduk, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25),),
+                                  Text('- '+_kodeProdukTextController.text+' -', style: TextStyle(color: Colors.white, fontSize: 18),),
+                                  SizedBox(height: 15,),
+                                  AbsorbPointer(
+                                    absorbing: _editing,
+                                    child: InkWell(
+                                      onTap: (){
+                                        _authData.getImage().then((image){
+                                          setState(() {
+                                            _image = image;
+                                          });
+                                        });
+                                      },
+                                      child:_image == null ? ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                                        child: Image.network('${_imgProdukTextController.text}', width: 80,),
+                                      ) : ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                                        child: Image.file(_image!, width: 80,),
                                       ),
                                     ),
-                                    Visibility(
-                                      visible: isVisibleSave,
-                                      child: IconButton(
-                                        icon: Icon(Icons.save, color: Colors.blue, size: 30,),
-                                        onPressed: (){
-                                          if(_formKey.currentState!.validate()){
-                                            EasyLoading.show(status: 'Updating...');
-                                            if(_image != null){
-                                              _authData.uploadProdukImage(_image!.path, _namaProdukController.text).then((url){
-                                                if(url != null){
-                                                  EasyLoading.showSuccess('Diperbaharui');
-                                                  Navigator.of(context).pop();
-                                                  _authData.updateProdukDataToDb(
-                                                    context: context,
-                                                    idProduk: widget.idProduk,
-                                                    namaProduk: _namaProdukController.text,
-                                                    hargaProduk: double.parse(_hargaProdukTextController.text),
-                                                    stokProduk: int.parse(_stokProdukTextController.text),
-                                                    ketProduk: _ketProdukTextController.text,
-                                                    image: url,
-                                                    namaSupProduk: _suplierTextController.text,
-                                                    idSup: _idsuplierTextController.text,
-                                                    namaCatProduk: _categoryTextController.text,
-                                                    idCat: _idcategoryTextController.text,
-                                                  );
-                                                }
-                                              });
-                                            }else{
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Visibility(
+                                  visible: isVisibleEdit,
+                                  child: IconButton(
+                                      icon: Icon(Icons.edit, color: Colors.green, size: 30,),
+                                      onPressed: (){
+                                        setState(() {
+                                          _editing = false;
+                                          isVisibleEdit = false;
+                                          isVisibleSave = true;
+                                        });
+                                      }
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isVisibleSave,
+                                  child: IconButton(
+                                    icon: Icon(Icons.save, color: Colors.blue, size: 30,),
+                                    onPressed: (){
+                                      if(_formKey.currentState!.validate()){
+                                        EasyLoading.show(status: 'Updating...');
+                                        if(_image != null){
+                                          _authData.uploadProdukImage(_image!.path, _namaProdukController.text).then((url){
+                                            if(url != null){
                                               EasyLoading.showSuccess('Diperbaharui');
                                               Navigator.of(context).pop();
                                               _authData.updateProdukDataToDb(
@@ -189,26 +172,42 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
                                                 hargaProduk: double.parse(_hargaProdukTextController.text),
                                                 stokProduk: int.parse(_stokProdukTextController.text),
                                                 ketProduk: _ketProdukTextController.text,
-                                                image: _imgProdukTextController.text,
+                                                image: url,
                                                 namaSupProduk: _suplierTextController.text,
                                                 idSup: _idsuplierTextController.text,
                                                 namaCatProduk: _categoryTextController.text,
                                                 idCat: _idcategoryTextController.text,
                                               );
                                             }
-                                          }else{
-                                            EasyLoading.showInfo('Lengkapi Data!');
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                          });
+                                        }else{
+                                          EasyLoading.showSuccess('Diperbaharui');
+                                          Navigator.of(context).pop();
+                                          _authData.updateProdukDataToDb(
+                                            context: context,
+                                            idProduk: widget.idProduk,
+                                            namaProduk: _namaProdukController.text,
+                                            hargaProduk: double.parse(_hargaProdukTextController.text),
+                                            stokProduk: int.parse(_stokProdukTextController.text),
+                                            ketProduk: _ketProdukTextController.text,
+                                            image: _imgProdukTextController.text,
+                                            namaSupProduk: _suplierTextController.text,
+                                            idSup: _idsuplierTextController.text,
+                                            namaCatProduk: _categoryTextController.text,
+                                            idCat: _idcategoryTextController.text,
+                                          );
+                                        }
+                                      }else{
+                                        EasyLoading.showInfo('Lengkapi Data!');
+                                      }
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        );
-                      },
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 15,),
@@ -303,9 +302,6 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
                                 if(value!.isEmpty){
                                   return 'masukkan harga ikan';
                                 }
-                                /*setState(() {
-                                  hargaProduk = double.parse(value);
-                                });*/
                                 return null;
                               },
                               style: TextStyle(
@@ -333,9 +329,6 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
                                 if(value!.isEmpty){
                                   return 'masukkan stok ikan';
                                 }
-                                /*setState(() {
-                                  stokProduk = int.parse(value);
-                                });*/
                                 return null;
                               },
                               style: TextStyle(
@@ -424,35 +417,7 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
           ),
         ),
 
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            showDialog(
-              context: context,
-              builder: (BuildContext context){
-                return CupertinoAlertDialog(
-                  title: Text('Hapus Produk!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                  content: Text('Yakin ingin menghapus Produk', style: TextStyle(fontSize: 18,),),
-                  actions: [
-                    CupertinoDialogAction(
-                      child: Text('Batal'),
-                      onPressed: (){Navigator.of(context).pop();},
-                    ),
-                    CupertinoDialogAction(
-                      child: Text('Iya'),
-                      onPressed: (){
-                        EasyLoading.showSuccess('Dihapus');
-                        Navigator.pushReplacementNamed(context, ProdukScreen.id);
-                        _services.customer.doc(widget.idProduk).delete();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          backgroundColor: Colors.red,
-          child: Icon(Icons.delete_forever, color: Colors.white, size: 30,),
-        ),
+        floatingActionButton: AddToCartWidget(document: (widget.document as dynamic)),
       ),
     );
   }

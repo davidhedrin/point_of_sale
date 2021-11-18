@@ -20,6 +20,23 @@ class SuplierScreen extends StatefulWidget {
 class _SuplierScreenState extends State<SuplierScreen> {
   FirebaseServices _services = FirebaseServices();
 
+  late TextEditingController _searchTextController;
+  late String searchKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchTextController = TextEditingController();
+    _searchTextController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  void dispose(){
+    super.dispose();
+    _searchTextController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,6 +66,12 @@ class _SuplierScreenState extends State<SuplierScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 15.0, left: 15.0, top: 5.0),
                 child: TextField(
+                  controller: _searchTextController,
+                  onChanged: (value){
+                    setState(() {
+                      searchKey = value;
+                    });
+                  },
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -60,11 +83,14 @@ class _SuplierScreenState extends State<SuplierScreen> {
                       hintStyle: TextStyle(color: Colors.white60),
                       fillColor: Colors.white.withOpacity(0.5),
                       filled: true,
-                      suffixIcon: InkWell(
-                          onTap: (){
-                            EasyLoading.showInfo('Yes');
-                          },
-                          child: Icon(Icons.search, color: Colors.white,)
+                      suffixIcon: _searchTextController.text.isEmpty ? IconButton(
+                        onPressed: (){},
+                        icon: Icon(Icons.search, color: Colors.white70,),
+                      ) : IconButton(
+                        icon: Icon(Icons.clear, color: Colors.red,),
+                        onPressed: (){
+                          _searchTextController.clear();
+                        },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(13.0),
@@ -76,7 +102,9 @@ class _SuplierScreenState extends State<SuplierScreen> {
           ),
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: _services.suplier.snapshots(),
+          stream: _searchTextController.text.isEmpty ? _services.suplier.snapshots() :
+          _services.suplier.where('nama_suplier', isGreaterThanOrEqualTo: searchKey).
+          where('nama_suplier', isLessThan: searchKey + 'z').snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
             if(snapshot.hasError){
               return Text('Terjadi kesalahan');
