@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CartService{
   CollectionReference cart = FirebaseFirestore.instance.collection('carts');
@@ -13,11 +14,12 @@ class CartService{
       'nama_produk' : namaProduk,
       'harga_produk' : hargaProduk,
       'unit_produk' : 1,
+      'total_harga' : hargaProduk,
       'imageUrl' : urlImage,
     });
   }
 
-  Future<void> updateCartQty (docId, qty) async {
+  Future<void> updateCartQty (docId, qty, total_harga) async {
     DocumentReference documentReference = FirebaseFirestore.instance.collection('carts').doc(docId);
 
     return FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -27,7 +29,10 @@ class CartService{
         throw Exception("Produk tidak ditemukan");
       }
 
-      transaction.update(documentReference, {'unit_produk': qty});
+      transaction.update(documentReference, {
+        'unit_produk': qty,
+        'total_harga' : total_harga,
+      });
 
       return qty;
     })
@@ -38,4 +43,12 @@ class CartService{
   Future<void> removeFormCart(docId) async {
     cart.doc(docId).delete();
   }
+
+  Future<DocumentSnapshot> getShopData() async {
+    User user = FirebaseAuth.instance.currentUser!;
+
+    DocumentSnapshot doc = await cart.doc(user.uid).get();
+    return doc;
+  }
+
 }

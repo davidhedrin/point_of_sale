@@ -226,52 +226,6 @@ class _ProdukScreenState extends State<ProdukScreen> {
                       );
                     }).toList(),
                   ),
-
-                  //but produk POS
-                  /*GridView.count(
-                    crossAxisCount: 2,
-                    children: snapshot.data!.docs.map((DocumentSnapshot doc){
-                      return Card(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                        elevation: 6.0,
-                        color: Colors.black38,
-                        child: Stack(
-                          children: <Widget>[
-                            Image.asset('images/produk.png'),
-
-                            //tombol tambah
-                            Container(
-                              margin: EdgeInsets.only(bottom: 0, right: 0),
-                              height: 40,
-                              width: 90,
-                              child: Stack(
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: (){},
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-                                    padding: EdgeInsets.all(0.0),
-                                    child:Ink(
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(10.0)
-                                      ),
-                                    )
-                                  ),
-                                  Center(child: Text('Tambah',style: TextStyle(color: Colors.white),))
-                                ],
-                              ),
-                            ),
-
-                            //harga
-                            Container(
-                              margin: EdgeInsets.only(bottom: 0,left: 5),
-                              child: Text('₹449',style: TextStyle(fontSize: 22.0,fontWeight: FontWeight.bold),),
-                            )
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),*/
                 ),
               );
             }

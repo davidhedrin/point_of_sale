@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:point_of_sale/providers/auth_provider.dart';
+import 'package:point_of_sale/screens/pos_screen.dart';
 import 'package:point_of_sale/services/firebase_services.dart';
 import 'package:point_of_sale/widgets/add_cart/add_to_cart_detail_widget.dart';
 import 'package:point_of_sale/widgets/list/suplier_category_list.dart';
@@ -106,7 +107,9 @@ class _POSProdukDetailScreenState extends State<POSProdukDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              onPressed: () => Navigator.of(context).pop(),
+                              onPressed: (){
+                                Navigator.pop(context);
+                              },
                               icon: Icon(Icons.arrow_back_ios, color: Colors.white,),
                             ),
                             Padding(

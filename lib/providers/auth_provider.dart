@@ -10,6 +10,7 @@ import 'package:point_of_sale/screens/add/addCategory_screen.dart';
 import 'package:point_of_sale/screens/add/addCustomer_screen.dart';
 import 'package:point_of_sale/screens/add/addProduk_screen.dart';
 import 'package:point_of_sale/screens/add/addSuplier_screen.dart';
+import 'package:point_of_sale/services/cart_service.dart';
 
 class AuthProvider extends ChangeNotifier{
   String error = '';

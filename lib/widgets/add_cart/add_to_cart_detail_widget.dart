@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:point_of_sale/services/cart_service.dart';
-import 'package:point_of_sale/widgets/add_to_cart_button_detail.dart';
+import 'package:point_of_sale/widgets/add_cart/add_to_cart_button_detail.dart';
 
 class AddToCartWidget extends StatefulWidget {
   const AddToCartWidget({Key? key, required this.document}) : super(key: key);

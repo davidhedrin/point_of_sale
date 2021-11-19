@@ -107,7 +107,7 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
                             EasyLoading.show(status: 'Meminta...');
                             _services.getAdminCredentials().then((value){
                               value.docs.forEach((doc) async {
-                                if(doc.get('no_hp') == phoneNumber){
+                                if(doc.get('id_admin') == phoneNumber){
                                   isVisible = true;
                                   EasyLoading.dismiss();
                                   await authClass.verifyPhoneNumber(phoneNumber = phoneNumber, context, setData);

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:point_of_sale/screens/add/addPosCart_screen.dart';
 import 'package:point_of_sale/screens/details/pos_produk_detail_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
+import 'package:point_of_sale/services/cart_service.dart';
 import 'package:point_of_sale/services/firebase_services.dart';
+import 'package:point_of_sale/widgets/add_cart/add_to_cart_produk_screen.dart';
 import 'package:point_of_sale/widgets/navigation_drawer.dart';
 
 class PosScreen extends StatefulWidget {
@@ -20,6 +21,8 @@ class PosScreen extends StatefulWidget {
 class _PosScreenState extends State<PosScreen> {
 
   final FirebaseServices _services = FirebaseServices();
+  CartService _cart = CartService();
+  DocumentSnapshot? documents;
 
   late TextEditingController _searchTextController;
   late String searchKey;
@@ -40,6 +43,7 @@ class _PosScreenState extends State<PosScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xff363636),
@@ -137,6 +141,7 @@ class _PosScreenState extends State<PosScreen> {
                     controller: new ScrollController(keepScrollOffset: false),
                     scrollDirection: Axis.vertical,
                     children: snapshot.data!.docs.map((DocumentSnapshot doc){
+                      Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
                       return Padding(
                         padding: const EdgeInsets.only(right: 5.0, left: 5.0, top: 10.0),
                         child: InkWell(
@@ -145,8 +150,8 @@ class _PosScreenState extends State<PosScreen> {
                               context, MaterialPageRoute(
                                 builder: (context){
                                   return POSProdukDetailScreen(
-                                    idProduk: (doc.data()! as dynamic)['id_produk'],
-                                    namaProduk: (doc.data()! as dynamic)['nama_produk'],
+                                    idProduk: data['id_produk'],
+                                    namaProduk: data['nama_produk'],
                                     document: doc,
                                   );
                                 },
@@ -165,43 +170,43 @@ class _PosScreenState extends State<PosScreen> {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.all(Radius.circular(100)),
-                                    child: Image.network((doc.data()! as dynamic)['imageUrl'], width: 90,),
+                                    child: Image.network(data['imageUrl'], width: 90,),
                                   ),
                                   SizedBox(height: 10.0,),
                                   Text(
-                                    (doc.data()! as dynamic)['category_produk']['nama_category'],
+                                    data['category_produk']['nama_category'],
                                     style: TextStyle(color: Colors.white70, fontSize: 13),
                                   ),
                                   Text(
-                                    (doc.data()! as dynamic)['nama_produk'],
+                                    data['nama_produk'],
                                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format((doc.data()! as dynamic)['harga_produk']),
+                                        NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['harga_produk']),
                                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                                       ),
                                       Text('/kg', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),),
                                     ],
                                   ),
                                   SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: TextButton.icon(
-                                      style: TextButton.styleFrom(
-                                        textStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-                                        backgroundColor: Colors.white,
-                                        shape:RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(24.0),
-                                        ),
+                                  InkWell(
+                                    onTap: (){},
+                                    child: Container(
+                                      height: 38,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(50),  // radius of 10
+                                          color: Colors.white
                                       ),
-                                      onPressed: (){
-                                        EasyLoading.showSuccess('Click');
-                                      },
-                                      icon: Icon(Icons.add_shopping_cart_rounded,),
-                                      label: Text('Tambah',),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          AddToCardProdukScreen(document: doc as dynamic,),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -218,30 +223,117 @@ class _PosScreenState extends State<PosScreen> {
           },
         ),
 
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: (){
-            Navigator.pushNamed(context, AddPosCartScreen.id);
+        floatingActionButton: StreamBuilder<QuerySnapshot>(
+          stream: _cart.cart.snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+            if(snapshot.hasError){
+              return Text('Terjadi kesalahan');
+            }
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return Center(child: CircularProgressIndicator(),);
+            }
+            snapshot.data!.docs.map((DocumentSnapshot doc){
+              setState(() {
+                documents = doc;
+              });
+            });
+            return FloatingActionButton.extended(
+              onPressed: (){
+                Navigator.push(
+                  context, MaterialPageRoute(
+                    builder: (context){
+                      return AddPosCartScreen(
+                        document: documents as dynamic,
+                      );
+                    },
+                  ),
+                );
+              },
+              backgroundColor: Colors.white,
+              icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
+              label: snapshot.data!.docs.length == 0 ? Text(
+                'Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
+              ) : Row(
+                children: [
+                  Text('Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),),
+                  SizedBox(width: 5,),
+                  CircleAvatar(
+                    backgroundColor: Colors.red,
+                    maxRadius: 13,
+                    child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Text('${snapshot.data!.docs.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+            /*return Row(
+              children: snapshot.data!.docs.map((DocumentSnapshot doc){
+                return FloatingActionButton.extended(
+                  onPressed: (){
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                      builder: (context){
+                        return AddPosCartScreen(
+                          document: doc as dynamic,
+                        );
+                      },
+                    ),
+                    );
+                  },
+                  backgroundColor: Colors.white,
+                  icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
+                  label: snapshot.data!.docs.length == 0 ? Text(
+                    'Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
+                  ) : Row(
+                    children: [
+                      Text('Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),),
+                      SizedBox(width: 5,),
+                      CircleAvatar(
+                        backgroundColor: Colors.red,
+                        maxRadius: 13,
+                        child: FittedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text('${snapshot.data!.docs.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            );*/
           },
-          backgroundColor: Colors.white,
-          icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
-          label: Row(
-            children: [
-              Text('Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),),
-              SizedBox(width: 5,),
-              CircleAvatar(
-                backgroundColor: Colors.red,
-                maxRadius: 13,
-                child: FittedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Text('2', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+          /*child: FloatingActionButton.extended(
+            onPressed: (){
+              Navigator.pushNamed(context, AddPosCartScreen.id);
+            },
+            backgroundColor: Colors.white,
+            icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
+            label: Row(
+              children: [
+                Text('Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),),
+                SizedBox(width: 5,),
+                CircleAvatar(
+                  backgroundColor: Colors.red,
+                  maxRadius: 13,
+                  child: FittedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Text('3', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ),*/
         ),
       ),
     );
   }
 }
+

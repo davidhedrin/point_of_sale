@@ -53,7 +53,7 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
           _suplierTextController.text = (document.data()! as dynamic)['suplier_produk']['nama_suplier'];
           _idsuplierTextController.text = (document.data()! as dynamic)['suplier_produk']['id_suplier'];
           _kodeProdukTextController.text = (document.data()! as dynamic)['kode_produk'];
-          _hargaProdukTextController.text = (document.data()! as dynamic)['harga_produk'].toString();
+          _hargaProdukTextController.text = (document.data()! as dynamic)['harga_produk'].toStringAsFixed(0);
           _stokProdukTextController.text = (document.data()! as dynamic)['stok_produk'].toString();
           _categoryTextController.text = (document.data()! as dynamic)['category_produk']['nama_category'];
           _idcategoryTextController.text = (document.data()! as dynamic)['category_produk']['id_category'];

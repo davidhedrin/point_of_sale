@@ -4,8 +4,8 @@ import 'package:point_of_sale/services/cart_service.dart';
 import 'package:point_of_sale/widgets/add_cart/add_to_cart_detail_widget.dart';
 
 class CounterWidget extends StatefulWidget {
-  const CounterWidget({Key? key, this.document, this.qty, required this.docId}) : super(key: key);
-  final DocumentSnapshot? document;
+  const CounterWidget({Key? key, required this.document, this.qty, required this.docId}) : super(key: key);
+  final DocumentSnapshot<Map<String, dynamic>> document;
   final int? qty;
   final String docId;
 
@@ -34,7 +34,9 @@ class _CounterWidgetState extends State<CounterWidget> {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
-                child: _qty == 1 ? Icon(Icons.delete_forever, color: Colors.red, size: 27,) : Icon(Icons.remove_circle_outline, color: Colors.blue,),
+                child: _qty == 1 ? Icon(
+                  Icons.delete_forever, color: Colors.red, size: 27,
+                ) : Icon(Icons.remove_circle_outline, color: Colors.blue,),
                 onTap: (){
                   setState(() {
                     _updateing = true;
@@ -49,9 +51,11 @@ class _CounterWidgetState extends State<CounterWidget> {
                     setState(() {
                       _qty--;
                     });
+                    var _total = _qty * widget.document.data()!['harga_produk'];
                     _cart.updateCartQty(
                       widget.docId,
                       _qty,
+                      _total,
                     ).then((value){
                       setState(() {
                         _updateing = false;
@@ -79,9 +83,11 @@ class _CounterWidgetState extends State<CounterWidget> {
                     _updateing = true;
                     _qty++;
                   });
+                  var _total = _qty * widget.document.data()!['harga_produk'];
                   _cart.updateCartQty(
                     widget.docId,
                     _qty,
+                    _total,
                   ).then((value){
                     setState(() {
                       _updateing = false;
