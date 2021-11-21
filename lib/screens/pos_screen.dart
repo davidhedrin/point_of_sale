@@ -22,7 +22,6 @@ class _PosScreenState extends State<PosScreen> {
 
   final FirebaseServices _services = FirebaseServices();
   CartService _cart = CartService();
-  DocumentSnapshot? documents;
 
   late TextEditingController _searchTextController;
   late String searchKey;
@@ -232,22 +231,9 @@ class _PosScreenState extends State<PosScreen> {
             if(snapshot.connectionState == ConnectionState.waiting){
               return Center(child: CircularProgressIndicator(),);
             }
-            snapshot.data!.docs.map((DocumentSnapshot doc){
-              setState(() {
-                documents = doc;
-              });
-            });
             return FloatingActionButton.extended(
               onPressed: (){
-                Navigator.push(
-                  context, MaterialPageRoute(
-                    builder: (context){
-                      return AddPosCartScreen(
-                        document: documents as dynamic,
-                      );
-                    },
-                  ),
-                );
+                Navigator.pushNamed(context, AddPosCartScreen.id);
               },
               backgroundColor: Colors.white,
               icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
@@ -308,29 +294,6 @@ class _PosScreenState extends State<PosScreen> {
               }).toList(),
             );*/
           },
-          /*child: FloatingActionButton.extended(
-            onPressed: (){
-              Navigator.pushNamed(context, AddPosCartScreen.id);
-            },
-            backgroundColor: Colors.white,
-            icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
-            label: Row(
-              children: [
-                Text('Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),),
-                SizedBox(width: 5,),
-                CircleAvatar(
-                  backgroundColor: Colors.red,
-                  maxRadius: 13,
-                  child: FittedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Text('3', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),*/
         ),
       ),
     );

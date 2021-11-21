@@ -141,6 +141,7 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
               namaProduk : widget.document.data()!['nama_produk'],
               hargaProduk : double.parse(widget.document.data()!['harga_produk'].toString()),
               urlImage : widget.document.data()!['imageUrl'],
+              ketProduk: widget.document.data()!['ket_produk'],
             ).then((value){
               EasyLoading.showSuccess('Berhasil');
               setState(() {

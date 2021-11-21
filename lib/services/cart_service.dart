@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class CartService{
   CollectionReference cart = FirebaseFirestore.instance.collection('carts');
+  CollectionReference trans = FirebaseFirestore.instance.collection('transaksis');
 
-  Future<void> addToCart ({idProduk, kodeProduk, namaProduk, hargaProduk, urlImage}) async {
+  Future<void> addToCart ({idProduk, kodeProduk, namaProduk, hargaProduk, urlImage, ketProduk}) async {
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
     cart.doc('CART-'+timeStamp.toString()).set({
       'id_keranjang' : 'CART-'+timeStamp.toString(),
@@ -16,6 +16,7 @@ class CartService{
       'unit_produk' : 1,
       'total_harga' : hargaProduk,
       'imageUrl' : urlImage,
+      'ket_produk' : ketProduk,
     });
   }
 
@@ -43,12 +44,18 @@ class CartService{
   Future<void> removeFormCart(docId) async {
     cart.doc(docId).delete();
   }
+  Future<void> removeCart() async {
+    final result = await cart.get().then((snapshot){
+      for (DocumentSnapshot ds in snapshot.docs){
+        ds.reference.delete();
+      }
+    });
+  }
 
-  Future<DocumentSnapshot> getShopData() async {
-    User user = FirebaseAuth.instance.currentUser!;
-
-    DocumentSnapshot doc = await cart.doc(user.uid).get();
-    return doc;
+  //simpan transaksi baru ke tb transaksis
+  Future<DocumentReference>? saveCartToTransDb(Map<String, dynamic>data){
+    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
+    trans.doc('TRA-'+timeStamp.toString()).set(data);
   }
 
 }

@@ -203,6 +203,266 @@ class _CategoryListState extends State<CategoryList> {
   }
 }
 
+//Customers
+class CustomerList extends StatefulWidget {
+  const CustomerList({Key? key}) : super(key: key);
+
+  @override
+  _CustomerListState createState() => _CustomerListState();
+}
+
+class _CustomerListState extends State<CustomerList> {
+  final _formKey = GlobalKey<FormState>();
+  FirebaseServices _services = FirebaseServices();
+  @override
+  Widget build(BuildContext context) {
+    var _provider = Provider.of<AuthProvider>(context);
+
+    return Dialog(
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            color: Color(0xff363636),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10.0, left: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Pilih Customer', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                  IconButton(
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.close, color: Colors.white,),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 10,),
+          StreamBuilder<QuerySnapshot>(
+            stream: _services.customer.snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+              if(snapshot.hasError){
+                return Text('Terjadi kesalahan');
+              }
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return Center(child: CircularProgressIndicator(),);
+              }
+              return Expanded(
+                child: ListView(
+                  children: snapshot.data!.docs.map((DocumentSnapshot document){
+                    return ListTile(
+                      title: Text((document.data()! as dynamic)['nama_customer']),
+                      subtitle: Text((document.data()! as dynamic)['email_customer']),
+                      onTap: (){
+                        _provider.selectCustomer((document.data()! as dynamic)['nama_customer'], (document.data()! as dynamic)['id_customer']);
+                        Navigator.pop(context);
+                      },
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+          /*Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width,
+            child: FlatButton(
+              padding: EdgeInsets.only(right: 15.0, left: 15.0),
+              color: Colors.blue,
+              onPressed: (){
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context){
+                    return AlertDialog(
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Tambah Suplier', style: TextStyle(fontSize: 18),),
+                          SizedBox(height: 5,),
+                          Divider(color: Colors.black45,),
+                        ],
+                      ),
+                      content: Form(
+                        key: _formKey,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                validator: (value){
+                                  if(value!.isEmpty){
+                                    return 'masukkan nama suplier';
+                                  }
+                                  setState(() {
+                                    namaSuplier = value;
+                                  });
+                                  return null;
+                                },
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  prefixIcon: Icon(Icons.perm_identity,),
+                                  labelText: '*nama suplier',
+                                  labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                                ),
+                              ),
+                              SizedBox(height: 15,),
+                              TextFormField(
+                                controller: _emailTextController,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value){
+                                  if(value!.isEmpty){
+                                    return 'masukkan email suplier';
+                                  }
+                                  final bool _isValid = EmailValidator.validate(_emailTextController.text);
+                                  if(!_isValid){
+                                    return 'alamat email tidak valid';
+                                  }
+                                  setState(() {
+                                    _emailTextController.text = value;
+                                  });
+                                  return null;
+                                },
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  prefixIcon: Icon(Icons.email_rounded,),
+                                  labelText: '*email suplier',
+                                  labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              TextFormField(
+                                keyboardType: TextInputType.phone,
+                                maxLength: 11,
+                                validator: (value){
+                                  if(value!.isEmpty){
+                                    return 'masukkan nomor hp';
+                                  }
+                                  if(value.length<11){
+                                    return 'lengkapi nomor hp';
+                                  }
+                                  setState(() {
+                                    mobileSuplier = '+62' + value;
+                                  });
+                                  return null;
+                                },
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  prefixText: '+62 ',
+                                  hintStyle: TextStyle(color: Colors.black54),
+                                  prefixIcon: Icon(Icons.phone_android,),
+                                  labelText: '*no telepon',
+                                  labelStyle: TextStyle(fontSize: 16, color: Colors.black54),
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              TextFormField(
+                                validator: (value){
+                                  if(value!.isEmpty){
+                                    return 'masukkan alamat suplier';
+                                  }
+                                  setState(() {
+                                    alamatSuplier = value;
+                                  });
+                                  return null;
+                                },
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  prefixIcon: Icon(Icons.location_on_outlined,),
+                                  labelText: '*alamat suplier',
+                                  labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              TextFormField(
+                                controller: _ketSuplierTextController,
+                                validator: (value){
+                                  return null;
+                                },
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  prefixIcon: Icon(Icons.comment,),
+                                  labelText: 'komentar',
+                                  labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                                ),
+                              ),
+
+                              SizedBox(height: 20,),
+                              FloatingActionButton(
+                                onPressed: (){
+                                  EasyLoading.show(status: 'Menyimpan...');
+                                  if(_formKey.currentState!.validate()){
+                                    EasyLoading.showSuccess('Berhasil');
+                                    Navigator.of(context).pop();
+                                    _provider.saveSuplierDataToDb(
+                                      namaSuplier: namaSuplier,
+                                      emailSuplier: _emailTextController.text,
+                                      noHpSuplier: mobileSuplier,
+                                      alamatSuplier: alamatSuplier,
+                                      komentar: _ketSuplierTextController.text,
+                                    );
+                                  }
+                                  else{
+                                    EasyLoading.showInfo('Lengkapi semua data');
+                                  }
+                                },
+                                child:Icon(Icons.add, color: Colors.white,),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Tambahkan Suplier', style: TextStyle(color: Colors.white),),
+                  Icon(Icons.add, color: Colors.white,),
+                ],
+              ),
+            ),
+          ),*/
+        ],
+      ),
+    );
+  }
+}
+
+
 
 
 //Suplier

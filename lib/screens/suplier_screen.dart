@@ -129,6 +129,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
             }else{
               return ListView(
                 children: snapshot.data!.docs.map((DocumentSnapshot document){
+                  Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                   return Container(
                     margin: EdgeInsets.only(bottom: 17, right: 25, left: 25),
                     height: 140,//tinggi gambar
@@ -138,8 +139,8 @@ class _SuplierScreenState extends State<SuplierScreen> {
                           context, MaterialPageRoute(
                             builder: (context){
                               return SuplierDetailScreen(
-                                idSuplier: (document.data()! as dynamic)['id_suplier'],
-                                namaSuplier: (document.data()! as dynamic)['nama_suplier'],
+                                idSuplier: data['id_suplier'],
+                                namaSuplier: data['nama_suplier'],
                               );
                             }
                         ),
@@ -174,7 +175,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
                             padding: const EdgeInsets.only(top: 10.0, left: 10.0),
                             child: Row(
                               children: [
-                                Text((document.data()! as dynamic)['id_suplier'], style: TextStyle(color: Colors.white, fontSize: 13),),
+                                Text(data['id_suplier'], style: TextStyle(color: Colors.white, fontSize: 13),),
                               ],
                             ),
                           ),
@@ -182,7 +183,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
                             padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                             child: Row(
                               children: [
-                                Text((document.data()! as dynamic)['nama_suplier'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),),
+                                Text(data['nama_suplier'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),),
                               ],
                             ),
                           ),
@@ -190,7 +191,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
                             padding: const EdgeInsets.only(top: 60.0, left: 10.0),
                             child: Row(
                               children: [
-                                Text('+62'+(document.data()! as dynamic)['no_handpone'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),),
+                                Text('+62'+data['no_handpone'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),),
                               ],
                             ),
                           ),
@@ -201,7 +202,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
                             child: Column(
                               children: [
                                 Flexible(
-                                  child: Text((document.data()! as dynamic)['alamat_suplier'],
+                                  child: Text(data['alamat_suplier'],
                                     style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
                                     overflow: TextOverflow.ellipsis,),
                                 ),
@@ -219,7 +220,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
                                     builder: (BuildContext context){
                                       return CupertinoAlertDialog(
                                         title: Text('Hapus Suplier!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                        content: Text('Yakin ingin menghapus Suplier ${(document.data()! as dynamic)['nama_suplier']}', style: TextStyle(fontSize: 18,),),
+                                        content: Text('Yakin ingin menghapus Suplier ${data['nama_suplier']}', style: TextStyle(fontSize: 18,),),
                                         actions: [
                                           CupertinoDialogAction(
                                             child: Text('Batal'),
@@ -230,7 +231,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
                                             onPressed: (){
                                               EasyLoading.showSuccess('Dihapus');
                                               Navigator.of(context).pop();
-                                              _services.suplier.doc((document.data()! as dynamic)['id_suplier']).delete();
+                                              _services.suplier.doc(data['id_suplier']).delete();
                                             },
                                           ),
                                         ],

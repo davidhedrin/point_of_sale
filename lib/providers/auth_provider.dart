@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:point_of_sale/providers/cart_provider.dart';
 import 'package:point_of_sale/screens/add/addCategory_screen.dart';
 import 'package:point_of_sale/screens/add/addCustomer_screen.dart';
 import 'package:point_of_sale/screens/add/addProduk_screen.dart';
@@ -13,6 +14,9 @@ import 'package:point_of_sale/screens/add/addSuplier_screen.dart';
 import 'package:point_of_sale/services/cart_service.dart';
 
 class AuthProvider extends ChangeNotifier{
+
+  CartService _cart = CartService();
+
   String error = '';
   String email = '';
   bool isPickAvail = false;
@@ -360,6 +364,26 @@ class AuthProvider extends ChangeNotifier{
           CupertinoDialogAction(child: Text('Ok'), onPressed: () => Navigator.pop(context),),
         ],
       );
+    });
+  }
+
+
+  //save keranjang ke transaksi dan kirim ke Cart Service
+  String? id_Customer, selectedCustomer;
+  selectCustomer(selected, id_Customer){
+    this.selectedCustomer = selected;
+    this.id_Customer = id_Customer;
+    notifyListeners();
+  }
+  saveOrderToDbTrans(CartProvider cartProvider, subToHarga, metoBayar, metoKirim){
+    _cart.saveCartToTransDb({
+      'produks' : cartProvider.cartList,
+      'sub_total_harga' :subToHarga,
+      'customer' : {'nama_cutomer' : this.selectedCustomer, 'id_customer' : this.id_Customer},
+      'namaCustomer' : this.selectedCustomer,
+      'metode_bayar' : metoBayar,
+      'metode_kirim' : metoKirim,
+      'waktu_trans' : DateTime.now().toString(),
     });
   }
 }

@@ -136,14 +136,15 @@ class _ProdukScreenState extends State<ProdukScreen> {
                     crossAxisCount: 2,
                     childAspectRatio: 0.9,
                     children: snapshot.data!.docs.map((DocumentSnapshot doc){
+                      Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
                       return InkWell(
                         onTap: (){
                           Navigator.push(
                             context, MaterialPageRoute(
                             builder: (context){
                               return ProdukDetailScreen(
-                                idProduk: (doc.data()! as dynamic)['id_produk'],
-                                namaProduk: (doc.data()! as dynamic)['nama_produk'],
+                                idProduk: data['id_produk'],
+                                namaProduk: data['nama_produk'],
                               );
                             },
                           ),
@@ -168,7 +169,7 @@ class _ProdukScreenState extends State<ProdukScreen> {
                                           builder: (BuildContext context){
                                             return CupertinoAlertDialog(
                                               title: Text('Hapus Produk!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                              content: Text('Yakin ingin menghapus Produk ${(doc.data()! as dynamic)['nama_produk']}', style: TextStyle(fontSize: 18,),),
+                                              content: Text('Yakin ingin menghapus Produk ${data['nama_produk']}', style: TextStyle(fontSize: 18,),),
                                               actions: [
                                                 CupertinoDialogAction(
                                                   child: Text('Batal'),
@@ -179,7 +180,7 @@ class _ProdukScreenState extends State<ProdukScreen> {
                                                   onPressed: (){
                                                     EasyLoading.showSuccess('Dihapus');
                                                     Navigator.of(context).pop();
-                                                    _services.produk.doc((doc.data()! as dynamic)['id_produk']).delete();
+                                                    _services.produk.doc(data['id_produk']).delete();
                                                   },
                                                 ),
                                               ],
@@ -196,22 +197,22 @@ class _ProdukScreenState extends State<ProdukScreen> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.all(Radius.circular(100)),
-                                      child: Image.network((doc.data()! as dynamic)['imageUrl'], width: 90,),
+                                      child: Image.network(data['imageUrl'], width: 90,),
                                     ),
                                     SizedBox(height: 10.0,),
                                     Text(
-                                      (doc.data()! as dynamic)['category_produk']['nama_category'],
+                                      data['category_produk']['nama_category'],
                                       style: TextStyle(color: Colors.white70, fontSize: 13),
                                     ),
                                     Text(
-                                      (doc.data()! as dynamic)['nama_produk'],
+                                      data['nama_produk'],
                                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format((doc.data()! as dynamic)['harga_produk']),
+                                          NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['harga_produk']),
                                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                                         ),
                                         Text('/kg', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),),

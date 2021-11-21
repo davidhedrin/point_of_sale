@@ -133,6 +133,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: snapshot.data!.docs.map((DocumentSnapshot document){
+                  Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                   return Container(
                     margin: EdgeInsets.only(bottom: 17, right: 25, left: 25),
                     height: 100,//tinggi gambar
@@ -142,7 +143,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           context, MaterialPageRoute(
                             builder: (context){
                               return CategoryDetailScreen(
-                                idCategory: (document.data()! as dynamic)['category_id'],
+                                idCategory: data['category_id'],
                               );
                             }
                         ),
@@ -153,7 +154,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           Positioned.fill(//background image
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.cover,),
+                              child: Image.network(data['imageUrl'], fit: BoxFit.cover,),
                             ),
                           ),
                           Positioned(
@@ -187,13 +188,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       height: 70,//size gambar
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(50.0),
-                                        child: Image.network((document.data()! as dynamic)['imageUrl'], fit: BoxFit.cover,),
+                                        child: Image.network(data['imageUrl'], fit: BoxFit.cover,),
                                       ),
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15.0),
-                                    child: Text((document.data()! as dynamic)['category'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                                    child: Text(data['category'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
                                   ),
                                 ],
                               ),
@@ -210,7 +211,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     builder: (BuildContext context){
                                       return CupertinoAlertDialog(
                                         title: Text('Hapus Category!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                        content: Text('Yakin ingin menghapus Category ${(document.data()! as dynamic)['category']}', style: TextStyle(fontSize: 18,),),
+                                        content: Text('Yakin ingin menghapus Category ${data['category']}', style: TextStyle(fontSize: 18,),),
                                         actions: [
                                           CupertinoDialogAction(
                                             child: Text('Batal'),
@@ -221,7 +222,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             onPressed: (){
                                               EasyLoading.showSuccess('Dihapus');
                                               Navigator.of(context).pop();
-                                              _services.category.doc((document.data()! as dynamic)['category_id']).delete();
+                                              _services.category.doc(data['category_id']).delete();
                                             },
                                           ),
                                         ],
