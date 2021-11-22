@@ -47,18 +47,19 @@ class _ProdukDetailScreenState extends State<ProdukDetailScreen> {
 
   Future<void> getProdukDetailData() async {
     _services.produk.doc(widget.idProduk).get().then((DocumentSnapshot document){
+      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
       if(document.exists){
         setState(() {
-          _namaProdukController.text = (document.data()! as dynamic)['nama_produk'];
-          _suplierTextController.text = (document.data()! as dynamic)['suplier_produk']['nama_suplier'];
-          _idsuplierTextController.text = (document.data()! as dynamic)['suplier_produk']['id_suplier'];
-          _kodeProdukTextController.text = (document.data()! as dynamic)['kode_produk'];
-          _hargaProdukTextController.text = (document.data()! as dynamic)['harga_produk'].toStringAsFixed(0);
-          _stokProdukTextController.text = (document.data()! as dynamic)['stok_produk'].toString();
-          _categoryTextController.text = (document.data()! as dynamic)['category_produk']['nama_category'];
-          _idcategoryTextController.text = (document.data()! as dynamic)['category_produk']['id_category'];
-          _ketProdukTextController.text = (document.data()! as dynamic)['ket_produk'];
-          _imgProdukTextController.text = (document.data()! as dynamic)['imageUrl'];
+          _namaProdukController.text = data['nama_produk'];
+          _suplierTextController.text = data['suplier_produk']['nama_suplier'];
+          _idsuplierTextController.text = data['suplier_produk']['id_suplier'];
+          _kodeProdukTextController.text = data['kode_produk'];
+          _hargaProdukTextController.text = data['harga_produk'].toStringAsFixed(0);
+          _stokProdukTextController.text = data['stok_produk'].toString();
+          _categoryTextController.text = data['category_produk']['nama_category'];
+          _idcategoryTextController.text = data['category_produk']['id_category'];
+          _ketProdukTextController.text = data['ket_produk'];
+          _imgProdukTextController.text = data['imageUrl'];
         });
       }
     });

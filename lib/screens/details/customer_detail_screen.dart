@@ -115,8 +115,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                   SizedBox(height: 15,),
                   Form(
                     key: _formKey,
-                    child: FutureBuilder<DocumentSnapshot <Map <String, dynamic>>>(
-                      future: _services.firestore.collection('customers').doc(widget.idCustomer).get(),
+                    child: StreamBuilder<DocumentSnapshot <Map <String, dynamic>>>(
+                      stream: _services.firestore.collection('customers').doc(widget.idCustomer).snapshots(),
                       builder: (_, snapshot){
                         if(snapshot.hasError){
                           print('Terdapat masalah');
@@ -255,7 +255,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                                   maxLines: null,
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.only(bottom: 8),
-                                    prefixIcon: Icon(Icons.location_on_outlined,),
+                                    prefixIcon: Icon(Icons.location_on_outlined, color: Colors.white,),
                                     labelText: '*alamat customer',
                                     labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
                                   ),

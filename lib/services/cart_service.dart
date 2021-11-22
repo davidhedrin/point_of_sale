@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CartService{
   CollectionReference cart = FirebaseFirestore.instance.collection('carts');
   CollectionReference trans = FirebaseFirestore.instance.collection('transaksis');
+  FirebaseFirestore firestoreTrans = FirebaseFirestore.instance;
 
   Future<void> addToCart ({idProduk, kodeProduk, namaProduk, hargaProduk, urlImage, ketProduk}) async {
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
@@ -55,7 +56,7 @@ class CartService{
   //simpan transaksi baru ke tb transaksis
   Future<DocumentReference>? saveCartToTransDb(Map<String, dynamic>data){
     var timeStamp = new DateTime.now().microsecondsSinceEpoch;
-    trans.doc('TRA-'+timeStamp.toString()).set(data);
+    trans.doc('TRAS-'+timeStamp.toString()).set(data);
   }
 
 }

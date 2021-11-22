@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:point_of_sale/screens/details/order_detail_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
 import 'package:point_of_sale/screens/pos_screen.dart';
 import 'package:point_of_sale/services/cart_service.dart';
@@ -121,6 +123,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     child: ListView(
                       children: snapshot.data!.docs.map((DocumentSnapshot document) {
                         Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                        var doc_id = document.id;
                         return Padding(
                           padding: const EdgeInsets.only(right: 15.0, left: 15.0, top: 8),
                           child: new Container(
@@ -128,11 +131,22 @@ class _OrderScreenState extends State<OrderScreen> {
                             child: Column(
                               children: [
                                 ListTile(
+                                  onTap: (){
+                                    Navigator.push(
+                                      context, MaterialPageRoute(
+                                      builder: (context){
+                                        return OrderDetailScreen(
+                                          idTrans: doc_id,
+                                        );
+                                      },
+                                    ),
+                                    );
+                                  },
                                   horizontalTitleGap: 0,
                                   leading: CircleAvatar(
-                                    backgroundColor: Colors.black54,
+                                    backgroundColor: Colors.transparent,
                                     radius: 14,
-                                    child: Icon(CupertinoIcons.square_list, size: 28,),
+                                    child: Image.asset('images/pokdakan.png'),
                                   ),
                                   title: Text(
                                     data['customer']['nama_cutomer'],
@@ -149,14 +163,20 @@ class _OrderScreenState extends State<OrderScreen> {
                                       Text('${data['metode_bayar']} - ${data['metode_kirim']}', style: TextStyle(color: Colors.white, fontSize: 13),),
                                       Text(
                                         '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['sub_total_harga'])}',
-                                        style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+                                        style: TextStyle(color: Colors.deepOrange, fontSize: 16, fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
                                 ),
                                 ExpansionTile(
                                   collapsedIconColor: Colors.white60,
-                                  title: Text('Detail', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold),),
+                                  title: Row(
+                                    children: [
+                                      Text('Detail', style: TextStyle(color: Colors.white, fontSize: 13,),),
+                                      SizedBox(width: 8,),
+                                      Text(doc_id, style: TextStyle(color: Colors.green,  fontSize: 15, fontWeight: FontWeight.bold),),
+                                    ],
+                                  ),
                                   subtitle: Text('Detail Pesanan Transaksi', style: TextStyle(color: Colors.white60, fontSize: 12),),
                                   children: [
                                     ListView.builder(
@@ -202,13 +222,25 @@ class _OrderScreenState extends State<OrderScreen> {
                                               ),
                                             ],
                                           ),
-                                          subtitle: Text(
-                                            '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk'])}'
-                                            ' x ${data['produks'][index]['unit_produk']}',
-                                            style: TextStyle(fontSize: 12, color: Colors.white,),
+                                          subtitle: Row(
+                                            children: [
+                                              Text(
+                                                '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk'])}/kg',
+                                                style: TextStyle(fontSize: 12, color: Colors.white,),
+                                              ),
+                                              Text(
+                                                ' x ${data['produks'][index]['unit_produk']}',
+                                                style: TextStyle(fontSize: 12, color: Colors.blue,),
+                                              ),
+                                            ],
                                           ),
                                         );
                                       }
+                                    ),
+                                    Divider(color: Colors.white70,),
+                                    FlatButton(
+                                      child: Text('Cetak Transaksi', style: TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.bold),),
+                                      onPressed: (){},
                                     ),
                                   ],
                                 ),

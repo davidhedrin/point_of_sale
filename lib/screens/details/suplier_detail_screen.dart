@@ -119,8 +119,8 @@ class _SuplierDetailScreenState extends State<SuplierDetailScreen> {
                   SizedBox(height: 15,),
                   Form(
                     key: _formKey,
-                    child: FutureBuilder<DocumentSnapshot <Map <String, dynamic>>>(
-                      future: _services.firestore.collection('supliers').doc(widget.idSuplier).get(),
+                    child: StreamBuilder<DocumentSnapshot <Map <String, dynamic>>>(
+                      stream: _services.firestore.collection('supliers').doc(widget.idSuplier).snapshots(),
                       builder: (_, snapshot){
                         if(snapshot.hasError){
                           print('Terdapat masalah');

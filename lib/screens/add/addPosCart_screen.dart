@@ -285,7 +285,7 @@ class _AddPosCartScreenState extends State<AddPosCartScreen> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['harga_produk']),
+                                                    '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['harga_produk'])}/kg',
                                                     style: TextStyle(color: Colors.white, fontSize: 13),
                                                   ),
                                                   Text(' x${data['unit_produk'].toString()}', style: TextStyle(color: Colors.blue, fontSize: 13),),

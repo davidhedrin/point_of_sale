@@ -214,6 +214,12 @@ class CustomerList extends StatefulWidget {
 class _CustomerListState extends State<CustomerList> {
   final _formKey = GlobalKey<FormState>();
   FirebaseServices _services = FirebaseServices();
+
+  var _emailTextController = TextEditingController();
+  late String namaCustomer;
+  late String mobileCustomer;
+  late String alamatCustomer;
+
   @override
   Widget build(BuildContext context) {
     var _provider = Provider.of<AuthProvider>(context);
@@ -266,7 +272,7 @@ class _CustomerListState extends State<CustomerList> {
               );
             },
           ),
-          /*Container(
+          Container(
             height: 40,
             width: MediaQuery.of(context).size.width,
             child: FlatButton(
@@ -280,7 +286,7 @@ class _CustomerListState extends State<CustomerList> {
                       title: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Tambah Suplier', style: TextStyle(fontSize: 18),),
+                          Text('Tambah Customer', style: TextStyle(fontSize: 18),),
                           SizedBox(height: 5,),
                           Divider(color: Colors.black45,),
                         ],
@@ -294,10 +300,10 @@ class _CustomerListState extends State<CustomerList> {
                               TextFormField(
                                 validator: (value){
                                   if(value!.isEmpty){
-                                    return 'masukkan nama suplier';
+                                    return 'masukkan nama customer';
                                   }
                                   setState(() {
-                                    namaSuplier = value;
+                                    namaCustomer = value;
                                   });
                                   return null;
                                 },
@@ -354,7 +360,7 @@ class _CustomerListState extends State<CustomerList> {
                                     return 'lengkapi nomor hp';
                                   }
                                   setState(() {
-                                    mobileSuplier = '+62' + value;
+                                    mobileCustomer = '+62' + value;
                                   });
                                   return null;
                                 },
@@ -379,7 +385,7 @@ class _CustomerListState extends State<CustomerList> {
                                     return 'masukkan alamat suplier';
                                   }
                                   setState(() {
-                                    alamatSuplier = value;
+                                    alamatCustomer = value;
                                   });
                                   return null;
                                 },
@@ -398,39 +404,18 @@ class _CustomerListState extends State<CustomerList> {
                                 ),
                               ),
                               SizedBox(height: 10,),
-                              TextFormField(
-                                controller: _ketSuplierTextController,
-                                validator: (value){
-                                  return null;
-                                },
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  prefixIcon: Icon(Icons.comment,),
-                                  labelText: 'komentar',
-                                  labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                                ),
-                              ),
 
                               SizedBox(height: 20,),
                               FloatingActionButton(
                                 onPressed: (){
-                                  EasyLoading.show(status: 'Menyimpan...');
                                   if(_formKey.currentState!.validate()){
-                                    EasyLoading.showSuccess('Berhasil');
                                     Navigator.of(context).pop();
-                                    _provider.saveSuplierDataToDb(
-                                      namaSuplier: namaSuplier,
-                                      emailSuplier: _emailTextController.text,
-                                      noHpSuplier: mobileSuplier,
-                                      alamatSuplier: alamatSuplier,
-                                      komentar: _ketSuplierTextController.text,
+                                    EasyLoading.showSuccess('Berhasil');
+                                    _provider.saveCustomerDataToDb(
+                                      namaCustomer: namaCustomer,
+                                      emailCustomer: _emailTextController.text,
+                                      noHpCustomer: mobileCustomer,
+                                      alamatCustomer: alamatCustomer,
                                     );
                                   }
                                   else{
@@ -450,12 +435,12 @@ class _CustomerListState extends State<CustomerList> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Tambahkan Suplier', style: TextStyle(color: Colors.white),),
+                  Text('Tambahkan Customer', style: TextStyle(color: Colors.white),),
                   Icon(Icons.add, color: Colors.white,),
                 ],
               ),
             ),
-          ),*/
+          ),
         ],
       ),
     );

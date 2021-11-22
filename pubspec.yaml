@@ -28,6 +28,8 @@ dependencies:
   flutter_easyloading: ^3.0.3
   otp_text_field: ^1.1.1
   intl: ^0.17.0
+  pdf: ^3.6.3
+  open_file: ^3.2.1
 
 dev_dependencies:
   flutter_test:
@@ -40,3 +42,4 @@ flutter:
 
   assets:
     - images/
+    - assets/Oxygen-Regular.ttf
