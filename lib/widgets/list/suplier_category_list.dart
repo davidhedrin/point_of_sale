@@ -360,7 +360,7 @@ class _CustomerListState extends State<CustomerList> {
                                     return 'lengkapi nomor hp';
                                   }
                                   setState(() {
-                                    mobileCustomer = '+62' + value;
+                                    mobileCustomer = value;
                                   });
                                   return null;
                                 },
@@ -608,7 +608,7 @@ class _SuplierListState extends State<SuplierList> {
                                     return 'lengkapi nomor hp';
                                   }
                                   setState(() {
-                                    mobileSuplier = '+62' + value;
+                                    mobileSuplier = value;
                                   });
                                   return null;
                                 },

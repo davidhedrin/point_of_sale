@@ -3,21 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:point_of_sale/services/cart_service.dart';
 
-class AddToCardProdukScreen extends StatefulWidget {
-  const AddToCardProdukScreen({Key? key, required this.document}) : super(key: key);
+class AddToCartProdukScreen extends StatefulWidget {
+  const AddToCartProdukScreen({Key? key, required this.document}) : super(key: key);
   final DocumentSnapshot <Map<String, dynamic>> document;
 
   @override
-  State<AddToCardProdukScreen> createState() => _AddToCardProdukScreenState();
+  State<AddToCartProdukScreen> createState() => _AddToCartProdukScreenState();
 }
 
-class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
+class _AddToCartProdukScreenState extends State<AddToCartProdukScreen> {
   CartService _cart = CartService();
 
   int _qty = 1;
+  late int _qtyProd;
   bool _exists = false;
   bool _updateing = false;
   late String _docId;//id_keranjang
+
+  @override
+  void initState() {
+    getCartData();
+    _qtyProd = widget.document.data()!['stok_produk'];
+    super.initState();
+  }
 
   getCartData(){
     FirebaseFirestore.instance.collection('carts').
@@ -42,12 +50,6 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
   }
 
   @override
-  void initState() {
-    getCartData();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
 
     return _exists ? StreamBuilder(
@@ -67,14 +69,22 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
                       _updateing = true;
                     });
                     if(_qty == 1){
+                      setState(() {
+                        _qtyProd++;
+                      });
                       _cart.removeFormCart(_docId).then((value){
                         _updateing = false;
                         _exists = false;
                       });
+                      _cart.updateProdukQty(
+                        widget.document.data()!['id_produk'],
+                        _qtyProd,
+                      );
                     }
                     if(_qty > 1){
                       setState(() {
                         _qty--;
+                        _qtyProd++;
                       });
                       var _total = _qty * widget.document.data()!['harga_produk'];
                       _cart.updateCartQty(
@@ -86,6 +96,11 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
                           _updateing = false;
                         });
                       });
+
+                      _cart.updateProdukQty(
+                        widget.document.data()!['id_produk'],
+                        _qtyProd,
+                      );
                     }
                   },
                 ),
@@ -112,6 +127,7 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
                     setState(() {
                       _updateing = true;
                       _qty++;
+                      _qtyProd--;
                     });
                     var _total = _qty * widget.document.data()!['harga_produk'];
                     _cart.updateCartQty(
@@ -123,6 +139,12 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
                         _updateing = false;
                       });
                     });
+
+                    _cart.updateProdukQty(
+                      widget.document.data()!['id_produk'],
+                      _qtyProd,
+                    );
+
                   },
                 ),
               ),
@@ -134,6 +156,9 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
       builder: (BuildContext context, AsyncSnapshot<dynamic>snapshot){
         return InkWell(
           onTap: (){
+            setState(() {
+              _qtyProd--;
+            });
             EasyLoading.show(status: 'Menyimpan...');
             _cart.addToCart(
               idProduk : widget.document.data()!['id_produk'],
@@ -148,6 +173,11 @@ class _AddToCardProdukScreenState extends State<AddToCardProdukScreen> {
                 _exists = true;
               });
             });
+
+            _cart.updateProdukQty(
+              widget.document.data()!['id_produk'],
+              _qtyProd,
+            );
           },
           child: Row(
             children: [

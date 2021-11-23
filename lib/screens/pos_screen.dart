@@ -171,7 +171,11 @@ class _PosScreenState extends State<PosScreen> {
                                     borderRadius: BorderRadius.all(Radius.circular(100)),
                                     child: Image.network(data['imageUrl'], width: 90,),
                                   ),
-                                  SizedBox(height: 10.0,),
+                                  SizedBox(height: 5.0,),
+                                  Text(
+                                    '${data['stok_produk'].toString()} units',
+                                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13),
+                                  ),
                                   Text(
                                     data['category_produk']['nama_category'],
                                     style: TextStyle(color: Colors.white70, fontSize: 13),
@@ -203,7 +207,7 @@ class _PosScreenState extends State<PosScreen> {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          AddToCardProdukScreen(document: doc as dynamic,),
+                                          AddToCartProdukScreen(document: doc as dynamic,),
                                         ],
                                       ),
                                     ),

@@ -294,15 +294,15 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                     height: 80,
                                     width: 80,
                                     decoration: BoxDecoration(
-                                      image: DecorationImage(image: AssetImage('images/pos.png')),
+                                      image: DecorationImage(image: AssetImage('images/order.png')),
                                     ),
                                   ),
                                 ),
-                                Text('POS', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
+                                Text('All Orders', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
                             onPressed: (){
-                              Navigator.pushNamed(context, PosScreen.id);
+                              Navigator.pushNamed(context, OrderScreen.id);
                             },
                           ),
                         ),
@@ -330,15 +330,15 @@ class _BodyHomeMenuState extends State<BodyHomeMenu> {
                                     height: 80,
                                     width: 80,
                                     decoration: BoxDecoration(
-                                      image: DecorationImage(image: AssetImage('images/order.png')),
+                                      image: DecorationImage(image: AssetImage('images/pos.png')),
                                     ),
                                   ),
                                 ),
-                                Text('All Orders', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
+                                Text('POS', style: GoogleFonts.roboto(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),),
                               ],
                             ),
                             onPressed: (){
-                              Navigator.pushNamed(context, OrderScreen.id);
+                              Navigator.pushNamed(context, PosScreen.id);
                             },
                           ),
                         ),

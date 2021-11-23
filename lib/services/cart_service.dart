@@ -21,6 +21,26 @@ class CartService{
     });
   }
 
+  Future<void> updateProdukQty (docId, qty) async {
+    DocumentReference documentReference = FirebaseFirestore.instance.collection('produks').doc(docId);
+
+    return FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot = await transaction.get(documentReference);
+
+      if (!snapshot.exists) {
+        throw Exception("Produk tidak ditemukan");
+      }
+
+      transaction.update(documentReference, {
+        'stok_produk': qty,
+      });
+
+      return qty;
+    })
+        .then((value) => print("Update Cart"))
+        .catchError((error) => print("Gagal update cart: $error"));
+  }
+
   Future<void> updateCartQty (docId, qty, total_harga) async {
     DocumentReference documentReference = FirebaseFirestore.instance.collection('carts').doc(docId);
 

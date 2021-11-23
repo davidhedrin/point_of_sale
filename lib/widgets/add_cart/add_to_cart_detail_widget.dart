@@ -18,10 +18,12 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
   bool _loading = true;
   bool _exists = false;
   int _qty = 1;
+  late int _qtyProd;
   late String _docId;//id_keranjang
 
   void initState() {
     getCartData();
+    _qtyProd = widget.document.data()!['stok_produk'];
     super.initState();
   }
 
@@ -97,6 +99,9 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
       icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.blue, size: 30,),
       label: Text('Tambah', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 15),),
       onPressed: (){
+        setState(() {
+          _qtyProd--;
+        });
         EasyLoading.show(status: 'Menyimpan...');
         _cart.addToCart(
           idProduk : widget.document.data()!['id_produk'],
@@ -115,6 +120,10 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
           });
           EasyLoading.showSuccess('Berhasil');
         });
+        _cart.updateProdukQty(
+          widget.document.data()!['id_produk'],
+          _qtyProd,
+        );
       },
     );
   }

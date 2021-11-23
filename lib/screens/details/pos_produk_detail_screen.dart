@@ -420,7 +420,7 @@ class _POSProdukDetailScreenState extends State<POSProdukDetailScreen> {
           ),
         ),
 
-        floatingActionButton: AddToCartWidget(document: (widget.document as dynamic)),
+        /*floatingActionButton: AddToCartWidget(document: (widget.document as dynamic)),*/
       ),
     );
   }

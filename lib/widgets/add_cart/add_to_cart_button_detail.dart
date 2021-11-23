@@ -16,6 +16,8 @@ class CounterWidget extends StatefulWidget {
 class _CounterWidgetState extends State<CounterWidget> {
   CartService _cart = CartService();
   late int _qty;
+  late int _qtyProd;
+  late String _produkId;//id_keranjang
 
   bool _updateing = false;
   bool _exists = true;
@@ -24,6 +26,8 @@ class _CounterWidgetState extends State<CounterWidget> {
   Widget build(BuildContext context) {
     setState(() {
       _qty = widget.qty!;
+      _qtyProd = widget.document.data()!['stok_produk'];
+      _produkId = widget.document.id;
     });
 
     return _exists ? Container(
@@ -42,14 +46,22 @@ class _CounterWidgetState extends State<CounterWidget> {
                     _updateing = true;
                   });
                   if(_qty == 1){
+                    setState(() {
+                      _qtyProd++;
+                    });
                     _cart.removeFormCart(widget.docId).then((value){
                       _updateing = false;
                       _exists = false;
                     });
+                    _cart.updateProdukQty(
+                      _produkId,
+                      _qtyProd,
+                    );
                   }
                   if(_qty > 1){
                     setState(() {
                       _qty--;
+                      _qtyProd++;
                     });
                     var _total = _qty * widget.document.data()!['harga_produk'];
                     _cart.updateCartQty(
@@ -61,6 +73,11 @@ class _CounterWidgetState extends State<CounterWidget> {
                         _updateing = false;
                       });
                     });
+
+                    _cart.updateProdukQty(
+                      _produkId,
+                      _qtyProd,
+                    );
                   }
                 },
               ),
@@ -82,6 +99,7 @@ class _CounterWidgetState extends State<CounterWidget> {
                   setState(() {
                     _updateing = true;
                     _qty++;
+                    _qtyProd--;
                   });
                   var _total = _qty * widget.document.data()!['harga_produk'];
                   _cart.updateCartQty(
@@ -93,6 +111,11 @@ class _CounterWidgetState extends State<CounterWidget> {
                       _updateing = false;
                     });
                   });
+
+                  _cart.updateProdukQty(
+                    _produkId,
+                    _qtyProd,
+                  );
                 },
               ),
             ),
