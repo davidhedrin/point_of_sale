@@ -23,6 +23,7 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   CartService _cart = CartService();
+  DocumentSnapshot <Map<String, dynamic>>? docs;
 
   var _namaCustomerController = TextEditingController();
   var _idCustomerController = TextEditingController();
@@ -48,6 +49,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           _waktuTransController.text = data['waktu_trans'];
           _metBayarController.text = data['metode_bayar'];
           _metKirimController.text = data['metode_kirim'];
+
+          docs = document as dynamic;
         });
       }
     });
@@ -194,13 +197,82 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
                 pw.Divider(color: PdfColors.black,),
 
-                pw.Text(
-                  'Isi Pesanan',
-                  style: pw.TextStyle(
-                    fontSize: 14,
-                    color: PdfColors.black,
-                    font: myFont,
+                //print(docs!.data()!['produks'][0]['nama_produk']);
+                /*ListTile(
+                  horizontalTitleGap: 10,
+                  leading: CircleAvatar(
+                    radius: 30.0,
+                    backgroundImage: NetworkImage(data['produks'][index]['imageUrl'],),
                   ),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            data['produks'][index]['nama_produk'],
+                            style: TextStyle(fontSize: 15, color: Colors.black87, fontWeight: FontWeight.bold),
+                          ),
+                          Card(
+                            color: Colors.deepOrange,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 5.0, left: 5.0, top: 3.0, bottom: 3.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    data['produks'][index]['kode_produk'],
+                                    style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk']*data['produks'][index]['unit_produk'])}',
+                        style: TextStyle(color: Colors.black87, fontSize: 14,),
+                      ),
+                    ],
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk'])}/kg',
+                            style: TextStyle(fontSize: 12, color: Colors.black87,),
+                          ),
+                          Text(
+                            ' x ${data['produks'][index]['unit_produk']}',
+                            style: TextStyle(fontSize: 12, color: Colors.blue,),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        data['produks'][index]['ket_produk'],
+                        style: TextStyle(color: Colors.black87, fontSize: 13,),
+                      ),
+                    ],
+                  ),
+                ),*/
+                pw.ListView.builder(
+                  itemCount: docs!.data()!['produks'].length,
+                  itemBuilder: (_, int index){
+                    return pw.Column(
+                      children: [
+                        pw.Text(
+                          docs!.data()!['produks'][index]['nama_produk'],
+                          style: pw.TextStyle(
+                            fontSize: 14,
+                            color: PdfColors.black,
+                            font: myFont,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
                 ),
                 pw.Divider(color: PdfColors.black,),
                 pw.Text(
