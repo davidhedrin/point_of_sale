@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:point_of_sale/screens/details/order_detail_screen.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
@@ -134,12 +133,12 @@ class _OrderScreenState extends State<OrderScreen> {
                                   onTap: (){
                                     Navigator.push(
                                       context, MaterialPageRoute(
-                                      builder: (context){
-                                        return OrderDetailScreen(
-                                          idTrans: doc_id,
-                                        );
-                                      },
-                                    ),
+                                        builder: (context){
+                                          return OrderDetailScreen(
+                                            idTrans: doc_id,
+                                          );
+                                        },
+                                      ),
                                     );
                                   },
                                   horizontalTitleGap: 0,
@@ -236,11 +235,6 @@ class _OrderScreenState extends State<OrderScreen> {
                                           ),
                                         );
                                       }
-                                    ),
-                                    Divider(color: Colors.white70,),
-                                    FlatButton(
-                                      child: Text('Cetak Transaksi', style: TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.bold),),
-                                      onPressed: (){},
                                     ),
                                   ],
                                 ),

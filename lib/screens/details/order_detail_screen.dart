@@ -25,13 +25,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   CartService _cart = CartService();
   DocumentSnapshot <Map<String, dynamic>>? docs;
 
-  var _namaCustomerController = TextEditingController();
-  var _idCustomerController = TextEditingController();
-  var _waktuTransController = TextEditingController();
-  var _metBayarController = TextEditingController();
-  var _metKirimController = TextEditingController();
-
-  var _namaBarangController = TextEditingController();
+  int nomorInvoice = 1;
 
   @override
   void initState() {
@@ -41,15 +35,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   Future<void> getTransDetailData() async {
     _cart.trans.doc(widget.idTrans).get().then((DocumentSnapshot document){
-      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
       if(document.exists){
         setState(() {
-          _namaCustomerController.text = data['customer']['nama_cutomer'];
-          _idCustomerController.text = data['customer']['id_customer'];
-          _waktuTransController.text = data['waktu_trans'];
-          _metBayarController.text = data['metode_bayar'];
-          _metKirimController.text = data['metode_kirim'];
-
           docs = document as dynamic;
         });
       }
@@ -131,7 +118,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       crossAxisAlignment: pw.CrossAxisAlignment.end,
                       children: [
                         pw.Text(
-                          '${DateFormat('kk:mm,  d MMM y').format(DateTime.parse(_waktuTransController.text))}',
+                          '${DateFormat('kk:mm,  d MMM y').format(DateTime.parse(docs!.data()!['waktu_trans']))}',
                           style: pw.TextStyle(
                             fontSize: 12,
                             color: PdfColors.black,
@@ -139,7 +126,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                         ),
                         pw.Text(
-                          'Met.Bayar: ${_metBayarController.text}',
+                          'Met.Bayar: ${docs!.data()!['metode_bayar']}',
                           style: pw.TextStyle(
                             fontSize: 12,
                             color: PdfColors.black,
@@ -147,7 +134,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                         ),
                         pw.Text(
-                          'Met.Kirim: ${_metKirimController.text}',
+                          'Met.Kirim: ${docs!.data()!['metode_kirim']}',
                           style: pw.TextStyle(
                             fontSize: 12,
                             color: PdfColors.black,
@@ -166,7 +153,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text(
-                          _namaCustomerController.text,
+                          docs!.data()!['customer']['nama_cutomer'],
                           style: pw.TextStyle(
                             fontSize: 30,
                             fontWeight: pw.FontWeight.bold,
@@ -174,7 +161,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                         ),
                         pw.Text(
-                          _idCustomerController.text,
+                          docs!.data()!['customer']['id_customer'],
                           style: pw.TextStyle(
                             fontSize: 14,
                             color: PdfColors.black,
@@ -197,82 +184,150 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
                 pw.Divider(color: PdfColors.black,),
 
-                //print(docs!.data()!['produks'][0]['nama_produk']);
-                /*ListTile(
-                  horizontalTitleGap: 10,
-                  leading: CircleAvatar(
-                    radius: 30.0,
-                    backgroundImage: NetworkImage(data['produks'][index]['imageUrl'],),
-                  ),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            data['produks'][index]['nama_produk'],
-                            style: TextStyle(fontSize: 15, color: Colors.black87, fontWeight: FontWeight.bold),
-                          ),
-                          Card(
-                            color: Colors.deepOrange,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 5.0, left: 5.0, top: 3.0, bottom: 3.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    data['produks'][index]['kode_produk'],
-                                    style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text(
+                      'No',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColors.black,
+                        font: myFont,
                       ),
-                      Text(
-                        '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk']*data['produks'][index]['unit_produk'])}',
-                        style: TextStyle(color: Colors.black87, fontSize: 14,),
+                    ),
+                    pw.Text(
+                      'Nama Barang',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColors.black,
+                        font: myFont,
                       ),
-                    ],
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk'])}/kg',
-                            style: TextStyle(fontSize: 12, color: Colors.black87,),
-                          ),
-                          Text(
-                            ' x ${data['produks'][index]['unit_produk']}',
-                            style: TextStyle(fontSize: 12, color: Colors.blue,),
-                          ),
-                        ],
+                    ),
+                    pw.Text(
+                      'Satuan/kg',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColors.black,
+                        font: myFont,
                       ),
-                      Text(
-                        data['produks'][index]['ket_produk'],
-                        style: TextStyle(color: Colors.black87, fontSize: 13,),
+                    ),
+                    pw.Text(
+                      'Banyak',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColors.black,
+                        font: myFont,
                       ),
-                    ],
-                  ),
-                ),*/
+                    ),
+                    pw.Text(
+                      'Total Harga',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColors.black,
+                        font: myFont,
+                      ),
+                    ),
+                  ]
+                ),
+                pw.Divider(color: PdfColors.black,),
+
                 pw.ListView.builder(
                   itemCount: docs!.data()!['produks'].length,
                   itemBuilder: (_, int index){
                     return pw.Column(
                       children: [
-                        pw.Text(
-                          docs!.data()!['produks'][index]['nama_produk'],
-                          style: pw.TextStyle(
-                            fontSize: 14,
-                            color: PdfColors.black,
-                            font: myFont,
+                        pw.Padding(
+                          padding: pw.EdgeInsets.only(top: 5),
+                          child: pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              pw.Text(
+                                '${nomorInvoice++}',
+                                style: pw.TextStyle(
+                                  fontSize: 14,
+                                  color: PdfColors.black,
+                                  font: myFont,
+                                ),
+                              ),
+                              pw.Row(
+                                children: [
+                                  pw.Text(
+                                    docs!.data()!['produks'][index]['nama_produk'],
+                                    style: pw.TextStyle(
+                                      fontSize: 14,
+                                      color: PdfColors.black,
+                                      font: myFont,
+                                    ),
+                                  ),
+                                  pw.SizedBox(width: 5),
+                                  pw.Container(
+                                    decoration: pw.BoxDecoration(
+                                      borderRadius: pw.BorderRadius.circular(2),
+                                      color: PdfColors.deepOrange,
+                                    ),
+                                    padding: pw.EdgeInsets.only(right: 3.0, left: 3.0, top: 1.0, bottom: 1.0),
+                                    child: pw.Text(
+                                      docs!.data()!['produks'][index]['kode_produk'],
+                                      style: pw.TextStyle(
+                                        color: PdfColors.white,
+                                        font: myFont,
+                                      ),
+                                    ),
+                                  ),
+                                ]
+                              ),
+                              pw.Text(
+                                '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(docs!.data()!['produks'][index]['harga_produk'])}',
+                                style: pw.TextStyle(
+                                  fontSize: 14,
+                                  color: PdfColors.black,
+                                  font: myFont,
+                                ),
+                              ),
+                              pw.Text(
+                                'x ${docs!.data()!['produks'][index]['unit_produk']}',
+                                style: pw.TextStyle(
+                                  fontSize: 14,
+                                  color: PdfColors.black,
+                                  font: myFont,
+                                ),
+                              ),
+                              pw.Text(
+                                '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(docs!.data()!['produks'][index]['harga_produk']*docs!.data()!['produks'][index]['unit_produk'])}',
+                                style: pw.TextStyle(
+                                  fontSize: 14,
+                                  color: PdfColors.black,
+                                  font: myFont,
+                                ),
+                              ),
+                            ]
                           ),
                         ),
                       ],
                     );
                   }
+                ),
+                pw.Divider(color: PdfColors.black,),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.end,
+                  children: [
+                    pw.Text(
+                      'Total Bayar: ',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColors.black,
+                        font: myFont,
+                      ),
+                    ),
+                    pw.Text(
+                      NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(docs!.data()!['sub_total_harga']),
+                      style: pw.TextStyle(
+                        fontSize: 17,
+                        color: PdfColors.black,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ]
                 ),
                 pw.Divider(color: PdfColors.black,),
                 pw.Text(
@@ -438,7 +493,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                             children: [
                                               Text(
                                                 data['produks'][index]['kode_produk'],
-                                                style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.bold),
+                                                style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
                                               ),
                                             ],
                                           ),
@@ -500,34 +555,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ],
         ),
 
-        bottomSheet: Container(
-          height: 40,
-          child: Row(
-            children: [
-              Expanded(
-                child: ButtonTheme(
-                  height: 40,
-                  child: RaisedButton(
-                    color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Cetak Invoice',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
-                        ),
-                        SizedBox(width: 5.0,),
-                        Icon(Icons.print, color: Colors.white,),
-                      ],
-                    ),
-                    onPressed: (){
-                      getPDF();
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            getPDF();
+          },
+          backgroundColor: Colors.blue,
+          child: Icon(Icons.print, color: Colors.white,),
         ),
       ),
     );

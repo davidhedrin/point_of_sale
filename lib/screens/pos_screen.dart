@@ -256,43 +256,6 @@ class _PosScreenState extends State<PosScreen> {
                 ],
               ),
             );
-            /*return Row(
-              children: snapshot.data!.docs.map((DocumentSnapshot doc){
-                return FloatingActionButton.extended(
-                  onPressed: (){
-                    Navigator.push(
-                      context, MaterialPageRoute(
-                      builder: (context){
-                        return AddPosCartScreen(
-                          document: doc as dynamic,
-                        );
-                      },
-                    ),
-                    );
-                  },
-                  backgroundColor: Colors.white,
-                  icon: Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
-                  label: snapshot.data!.docs.length == 0 ? Text(
-                    'Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
-                  ) : Row(
-                    children: [
-                      Text('Cart', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),),
-                      SizedBox(width: 5,),
-                      CircleAvatar(
-                        backgroundColor: Colors.red,
-                        maxRadius: 13,
-                        child: FittedBox(
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Text('${snapshot.data!.docs.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            );*/
           },
         ),
       ),
