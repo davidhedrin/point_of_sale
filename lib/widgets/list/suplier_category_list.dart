@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
@@ -165,6 +166,7 @@ class _CategoryListState extends State<CategoryList> {
                                           Navigator.of(context).pop();
                                           _provider.saveCategoryDataToDb(
                                             url: url,
+                                            idCate: Random().nextInt(90000) + 10000,
                                             category: _categoryTextController.text,
                                           );
                                           _provider.isPickAvail = false;
@@ -412,6 +414,7 @@ class _CustomerListState extends State<CustomerList> {
                                     Navigator.of(context).pop();
                                     EasyLoading.showSuccess('Berhasil');
                                     _provider.saveCustomerDataToDb(
+                                      idCustomer: Random().nextInt(90000) + 10000,
                                       namaCustomer: namaCustomer,
                                       emailCustomer: _emailTextController.text,
                                       noHpCustomer: mobileCustomer,
@@ -680,6 +683,7 @@ class _SuplierListState extends State<SuplierList> {
                                     EasyLoading.showSuccess('Berhasil');
                                     Navigator.of(context).pop();
                                     _provider.saveSuplierDataToDb(
+                                      idSuplier: Random().nextInt(90000) + 10000,
                                       namaSuplier: namaSuplier,
                                       emailSuplier: _emailTextController.text,
                                       noHpSuplier: mobileSuplier,

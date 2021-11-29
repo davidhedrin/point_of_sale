@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +19,9 @@ class AddCustomerData extends StatefulWidget {
 
 class _AddCustomerDataState extends State<AddCustomerData> {
   final _formKey = GlobalKey<FormState>();
-  var _emailTextController = TextEditingController();
+
   late String namaCustomer;
+  var _emailTextController = TextEditingController();
   late String mobileCustomer;
   late String alamatCustomer;
 
@@ -287,6 +290,7 @@ class _AddCustomerDataState extends State<AddCustomerData> {
             Navigator.pushReplacementNamed(context, CustomerScreen.id);
             _authData.saveCustomerDataToDb(
               context: context,
+              idCustomer: Random().nextInt(90000) + 10000,
               namaCustomer: namaCustomer,
               emailCustomer: _emailTextController.text,
               noHpCustomer: mobileCustomer,

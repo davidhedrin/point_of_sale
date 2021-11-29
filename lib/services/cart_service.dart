@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CartService{
@@ -5,10 +7,10 @@ class CartService{
   CollectionReference trans = FirebaseFirestore.instance.collection('transaksis');
   FirebaseFirestore firestoreTrans = FirebaseFirestore.instance;
 
-  Future<void> addToCart ({idProduk, kodeProduk, namaProduk, hargaProduk, urlImage, ketProduk}) async {
-    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
-    cart.doc('CART-'+timeStamp.toString()).set({
-      'id_keranjang' : 'CART-'+timeStamp.toString(),
+  Future<void> addToCart ({idCart, idProduk, kodeProduk, namaProduk, hargaProduk, urlImage, ketProduk}) async {
+    var idTime = '${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}';
+    cart.doc('CART-'+idTime+idCart.toString()).set({
+      'id_keranjang' : 'CART-'+idTime+idCart.toString(),
       'waktu_cart' : FieldValue.serverTimestamp(),
       'id_produk' : idProduk,
       'kode_produk' : kodeProduk,
@@ -75,8 +77,9 @@ class CartService{
 
   //simpan transaksi baru ke tb transaksis
   Future<DocumentReference>? saveCartToTransDb(Map<String, dynamic>data){
-    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
-    trans.doc('TRAS-'+timeStamp.toString()).set(data);
+    var idTime = '${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}';
+    int? numberRan = Random().nextInt(90000) + 10000;
+    trans.doc('TRAS-'+idTime+numberRan.toString()).set(data);
   }
 
 }

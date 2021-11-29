@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:point_of_sale/screens/login2_screen.dart';
 import 'package:point_of_sale/services/firebase_services.dart';
 import 'package:point_of_sale/services/phone_auth_service.dart';
 
@@ -44,7 +45,7 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: Colors.white,
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pushReplacementNamed(context, Login2Screen.id),
         ),
         title: Text('Reset Password', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),),
       ),
@@ -241,19 +242,24 @@ class _ResetPasswordAdminState extends State<ResetPasswordAdmin> {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 13.0, horizontal: 18.0),
                   onPressed: (){
+                    EasyLoading.show(status: 'Verification');
                     String phoneNumber2 = '+62${_phoneNumberController.text}';
                     if(kodeOtp.length == 6){
                       authClass.signInWithPhoneNumber(
                         verificationId_Final,
                         kodeOtp,
                         context,
-                      );
+                      ).then((value){
+                        EasyLoading.dismiss();
+
+                      });
                       authClass.getKonfirmNoHp(phoneNumber2);
                     }else{
                       authClass.showSnackBar(
                         context,
                         'Masukkan 6 digit OTP',
                       );
+                      EasyLoading.dismiss();
                     }
                   },
                   color: Theme.of(context).primaryColor,

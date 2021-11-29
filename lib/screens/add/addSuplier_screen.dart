@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
   late String emailSuplier;
   late String mobileSuplier;
   late String alamatSuplier;
+  int? idRandom;
 
   @override
   Widget build(BuildContext context) {
@@ -331,6 +334,7 @@ class _AddSuplierDataState extends State<AddSuplierData> {
             Navigator.pushReplacementNamed(context, SuplierScreen.id);
             _authData.saveSuplierDataToDb(
               context: context,
+              idSuplier: Random().nextInt(90000) + 10000,
               namaSuplier: namaSuplier,
               emailSuplier: _emailTextController.text,
               noHpSuplier: mobileSuplier,

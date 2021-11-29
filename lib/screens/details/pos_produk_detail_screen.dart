@@ -57,7 +57,7 @@ class _POSProdukDetailScreenState extends State<POSProdukDetailScreen> {
           _suplierTextController.text = data['suplier_produk']['nama_suplier'];
           _idsuplierTextController.text = data['suplier_produk']['id_suplier'];
           _kodeProdukTextController.text = data['kode_produk'];
-          _hargaProdukTextController.text = data['harga_produk'].toString();
+          _hargaProdukTextController.text = data['harga_produk'].toStringAsFixed(0);
           _stokProdukTextController.text = data['stok_produk'].toString();
           _categoryTextController.text = data['category_produk']['nama_category'];
           _idcategoryTextController.text = data['category_produk']['id_category'];

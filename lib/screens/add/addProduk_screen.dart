@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -460,6 +461,7 @@ class _AddProdukDataState extends State<AddProdukData> {
                 _formKey.currentState!.reset();
                 _authData.saveProdukDataToDb(
                   context: context,
+                  idProduk: Random().nextInt(90000) + 10000,
                   namaProduk: namaProduk,
                   hargaProduk: hargaProduk,
                   codeProduk: kodeProduk,

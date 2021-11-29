@@ -218,7 +218,7 @@ class _Login2ScreenState extends State<Login2Screen> {
                         children: [
                           InkWell(
                             onTap: (){
-                              Navigator.pushNamed(context, ResetPasswordAdmin.id);
+                              Navigator.pushReplacementNamed(context, ResetPasswordAdmin.id);
                             },
                             child: Text(
                               'lupa password?',

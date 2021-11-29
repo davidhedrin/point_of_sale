@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -161,6 +163,7 @@ class _AddToCartProdukScreenState extends State<AddToCartProdukScreen> {
             });
             EasyLoading.show(status: 'Menyimpan...');
             _cart.addToCart(
+              idCart: Random().nextInt(90000) + 10000,
               idProduk : widget.document.data()!['id_produk'],
               kodeProduk : widget.document.data()!['kode_produk'],
               namaProduk : widget.document.data()!['nama_produk'],

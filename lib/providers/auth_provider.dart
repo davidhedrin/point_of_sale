@@ -136,12 +136,12 @@ class AuthProvider extends ChangeNotifier{
   }
 
   //save category to database
-  Future<void>? saveCategoryDataToDb({url, category, context}) {
-    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
+  Future<void>? saveCategoryDataToDb({url, idCate, category, context}) {
+    var idTime = '${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}';
     CollectionReference _category = FirebaseFirestore.instance.collection('categorys');
     try{
-      _category.doc('CAT-'+timeStamp.toString()).set({
-        'category_id' : 'CAT-'+timeStamp.toString(),
+      _category.doc('CAT-'+idTime+idCate.toString()).set({
+        'category_id' : 'CAT-'+idTime+idCate.toString(),
         'category' : category,
         'imageUrl' : url,
       });
@@ -191,12 +191,12 @@ class AuthProvider extends ChangeNotifier{
   }
 
   //save produk to firebase
-  Future<void>? saveProdukDataToDb({url, namaProduk, hargaProduk, codeProduk, stokProduk, ketProduk, context}){
-    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
+  Future<void>? saveProdukDataToDb({url, idProduk, namaProduk, hargaProduk, codeProduk, stokProduk, ketProduk, context}){
+    var idTime = '${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}';
     CollectionReference _produk = FirebaseFirestore.instance.collection('produks');
     try{
-      _produk.doc('PO-'+timeStamp.toString()).set({
-        'id_produk' : 'PO-'+timeStamp.toString(),
+      _produk.doc('PO-'+idTime+idProduk.toString()).set({
+        'id_produk' : 'PO-'+idTime+idProduk.toString(),
         'suplier_produk' : {'nama_suplier' : this.selectedSuplier, 'id_suplier' : this.id_Suplier},
         'nama_produk' : namaProduk,
         'category_produk' : {'nama_category' : this.selectedCategory, 'id_category' : this.id_Category},
@@ -256,12 +256,12 @@ class AuthProvider extends ChangeNotifier{
   }
 
   //save suplier to database
-  Future<void> saveSuplierDataToDb({namaSuplier, emailSuplier, noHpSuplier, alamatSuplier, komentar, context}) async {
-    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
+  Future<void> saveSuplierDataToDb({idSuplier, namaSuplier, emailSuplier, noHpSuplier, alamatSuplier, komentar, context}) async {
+    var idTime = '${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}';
     CollectionReference _suplier = FirebaseFirestore.instance.collection('supliers');
     try{
-      _suplier.doc('SUP-'+timeStamp.toString()).set({
-        'id_suplier' : 'SUP-'+timeStamp.toString(),
+      _suplier.doc('SUP-'+idTime+idSuplier.toString()).set({
+        'id_suplier' : 'SUP-'+idTime+idSuplier.toString(),
         'nama_suplier' : namaSuplier,
         'email_suplier' : emailSuplier,
         'no_handpone' : noHpSuplier,
@@ -313,12 +313,12 @@ class AuthProvider extends ChangeNotifier{
   }
 
   //save customer to database
-  Future<void> saveCustomerDataToDb({namaCustomer, emailCustomer, noHpCustomer, alamatCustomer, context}) async {
-    var timeStamp = new DateTime.now().microsecondsSinceEpoch;
+  Future<void> saveCustomerDataToDb({idCustomer, namaCustomer, emailCustomer, noHpCustomer, alamatCustomer, context}) async {
+    var idTime = '${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}';
     CollectionReference _customer = FirebaseFirestore.instance.collection('customers');
     try{
-      _customer.doc('COS-'+timeStamp.toString()).set({
-        'id_customer' : 'COS-'+timeStamp.toString(),
+      _customer.doc('COS-'+idTime+idCustomer.toString()).set({
+        'id_customer' : 'COS-'+idTime+idCustomer.toString(),
         'nama_customer' : namaCustomer,
         'email_customer' : emailCustomer,
         'no_handpone' : noHpCustomer,

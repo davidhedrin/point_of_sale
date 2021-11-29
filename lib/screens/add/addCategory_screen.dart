@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -236,6 +237,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                 _authData.saveCategoryDataToDb(
                   context: context,
                   url: url,
+                  idCate: Random().nextInt(90000) + 10000,
                   category: _categoryTextController.text,
                 );
                 _authData.isPickAvail = false;

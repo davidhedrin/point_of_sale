@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:point_of_sale/screens/login2_screen.dart';
 import 'package:point_of_sale/screens/show_password_screen.dart';
 
@@ -41,7 +42,7 @@ class AuthClassService with ChangeNotifier{
   Future<void> verifyPhoneNumber(String phoneNumber, BuildContext context, Function setData) async {
 
     PhoneVerificationCompleted verificationCompleted = (PhoneAuthCredential phoneAuthCredential) async {
-      showSnackBarSuccess(context, 'Verification Berhasil');
+      print('Verification Berhasil');
     };
 
     PhoneVerificationFailed verificationFailed = (FirebaseAuthException exception) {
@@ -80,7 +81,7 @@ class AuthClassService with ChangeNotifier{
       final User? user = (await _auth.signInWithCredential(credential)).user;
       if (user != null) {
         getUserById(user.uid).then((snapShot){
-          Navigator.push(
+          Navigator.pushReplacement(
             context, MaterialPageRoute(
               builder: (context){
                 return ShowForgotePassword(
@@ -95,7 +96,9 @@ class AuthClassService with ChangeNotifier{
         print('Login failed');
       }
     }catch(e){
-      showSnackBar(context, e.toString());
+      EasyLoading.showInfo('OTP Salah');
+      notifyListeners();
+      showSnackBar(context, 'Masukkan kode OTP yang benar');
     }
   }
 

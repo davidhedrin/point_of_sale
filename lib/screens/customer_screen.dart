@@ -123,10 +123,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       if(snapshot.data!.docs.length == 0){//jika data kosong
                         return Center(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                  height: 180,
+                                  height: 170,
                                   child: Image.asset('images/EmptyCustomer.png')
                               ),
                               SizedBox(height: 15,),
@@ -151,7 +150,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                           namaCustomer : data['nama_customer'],
                                         );
                                       }
-                                  ),
+                                    ),
                                   );
                                 },
                                 child: Stack(

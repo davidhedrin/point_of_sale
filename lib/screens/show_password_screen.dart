@@ -37,7 +37,7 @@ class _ShowForgotePasswordState extends State<ShowForgotePassword> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: Colors.white70,
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pushReplacementNamed(context, Login2Screen.id),
           ),
           title: Text(
             'New Password',
