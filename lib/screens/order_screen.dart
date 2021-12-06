@@ -317,133 +317,150 @@ class _OrderScreenState extends State<OrderScreen> {
                                   if(snapshot.connectionState == ConnectionState.waiting){
                                     return Center(child: CircularProgressIndicator(),);
                                   }
-                                  return Expanded(
-                                    child: ListView(
-                                      children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                                        Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                                        var doc_id = document.id;
-                                        return Padding(
-                                          padding: const EdgeInsets.only(right: 15.0, left: 15.0, top: 8),
-                                          child: new Container(
-                                            color: Colors.black54,
-                                            child: Column(
-                                              children: [
-                                                ListTile(
-                                                  onTap: (){
-                                                    Navigator.push(
-                                                      context, MaterialPageRoute(
-                                                      builder: (context){
-                                                        return OrderDetailScreen(
-                                                          idTrans: doc_id,
-                                                        );
-                                                      },
+                                  if(snapshot.data!.docs.length == 0) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(top: 130.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                              height: 160,
+                                              child: Image.asset('images/set-tanggal.png')
+                                          ),
+                                          SizedBox(height: 15,),
+                                          Text('Tentukan Tanggal', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white60),),
+                                        ],
+                                      ),
+                                    );
+                                  }else{
+                                    return Expanded(
+                                      child: ListView(
+                                        children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                                          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                                          var doc_id = document.id;
+                                          return Padding(
+                                            padding: const EdgeInsets.only(right: 15.0, left: 15.0, top: 8),
+                                            child: new Container(
+                                              color: Colors.black54,
+                                              child: Column(
+                                                children: [
+                                                  ListTile(
+                                                    onTap: (){
+                                                      Navigator.push(
+                                                        context, MaterialPageRoute(
+                                                        builder: (context){
+                                                          return OrderDetailScreen(
+                                                            idTrans: doc_id,
+                                                          );
+                                                        },
+                                                      ),
+                                                      );
+                                                    },
+                                                    horizontalTitleGap: 0,
+                                                    leading: CircleAvatar(
+                                                      backgroundColor: Colors.transparent,
+                                                      radius: 14,
+                                                      child: Image.asset('images/pokdakan.png'),
                                                     ),
-                                                    );
-                                                  },
-                                                  horizontalTitleGap: 0,
-                                                  leading: CircleAvatar(
-                                                    backgroundColor: Colors.transparent,
-                                                    radius: 14,
-                                                    child: Image.asset('images/pokdakan.png'),
+                                                    title: Text(
+                                                      data['customer']['nama_cutomer'],
+                                                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    subtitle: Text(
+                                                      '${DateFormat('kk:mm – d MMM y').format(DateTime.parse(data['waktu_trans']))}',
+                                                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                                                    ),
+                                                    trailing: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Text('${data['metode_bayar']} - ${data['metode_kirim']}', style: TextStyle(color: Colors.white, fontSize: 13),),
+                                                        Text(
+                                                          '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['sub_total_harga'])}',
+                                                          style: TextStyle(color: Colors.deepOrange, fontSize: 16, fontWeight: FontWeight.bold),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  title: Text(
-                                                    data['customer']['nama_cutomer'],
-                                                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                                                  ),
-                                                  subtitle: Text(
-                                                    '${DateFormat('kk:mm – d MMM y').format(DateTime.parse(data['waktu_trans']))}',
-                                                    style: TextStyle(color: Colors.white70, fontSize: 13),
-                                                  ),
-                                                  trailing: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    mainAxisSize: MainAxisSize.min,
+                                                  ExpansionTile(
+                                                    collapsedIconColor: Colors.white60,
+                                                    title: Row(
+                                                      children: [
+                                                        Text('Detail', style: TextStyle(color: Colors.white, fontSize: 13,),),
+                                                        SizedBox(width: 8,),
+                                                        Text(doc_id, style: TextStyle(color: Colors.green,  fontSize: 15, fontWeight: FontWeight.bold),),
+                                                      ],
+                                                    ),
+                                                    subtitle: Text('Detail Pesanan Transaksi', style: TextStyle(color: Colors.white60, fontSize: 12),),
                                                     children: [
-                                                      Text('${data['metode_bayar']} - ${data['metode_kirim']}', style: TextStyle(color: Colors.white, fontSize: 13),),
-                                                      Text(
-                                                        '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['sub_total_harga'])}',
-                                                        style: TextStyle(color: Colors.deepOrange, fontSize: 16, fontWeight: FontWeight.bold),
+                                                      ListView.builder(
+                                                          shrinkWrap: true,
+                                                          physics: NeverScrollableScrollPhysics(),
+                                                          itemCount: data['produks'].length,
+                                                          itemBuilder: (BuildContext context, int index){
+                                                            return ListTile(
+                                                              leading: CircleAvatar(
+                                                                child: ClipRRect(
+                                                                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                                                                  child: Image.network(data['produks'][index]['imageUrl'], fit: BoxFit.cover,),
+                                                                ),
+                                                              ),
+                                                              title: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        data['produks'][index]['nama_produk'],
+                                                                        style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                      Card(
+                                                                        color: Colors.deepOrange,
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.only(right: 5.0, left: 5.0, top: 3.0, bottom: 3.0),
+                                                                          child: Column(
+                                                                            children: [
+                                                                              Text(
+                                                                                data['produks'][index]['kode_produk'],
+                                                                                style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Text(
+                                                                    '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk']*data['produks'][index]['unit_produk'])}',
+                                                                    style: TextStyle(color: Colors.white, fontSize: 13,),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              subtitle: Row(
+                                                                children: [
+                                                                  Text(
+                                                                    '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk'])}/kg',
+                                                                    style: TextStyle(fontSize: 12, color: Colors.white,),
+                                                                  ),
+                                                                  Text(
+                                                                    ' x ${data['produks'][index]['unit_produk']}',
+                                                                    style: TextStyle(fontSize: 12, color: Colors.blue,),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          }
                                                       ),
                                                     ],
                                                   ),
-                                                ),
-                                                ExpansionTile(
-                                                  collapsedIconColor: Colors.white60,
-                                                  title: Row(
-                                                    children: [
-                                                      Text('Detail', style: TextStyle(color: Colors.white, fontSize: 13,),),
-                                                      SizedBox(width: 8,),
-                                                      Text(doc_id, style: TextStyle(color: Colors.green,  fontSize: 15, fontWeight: FontWeight.bold),),
-                                                    ],
-                                                  ),
-                                                  subtitle: Text('Detail Pesanan Transaksi', style: TextStyle(color: Colors.white60, fontSize: 12),),
-                                                  children: [
-                                                    ListView.builder(
-                                                        shrinkWrap: true,
-                                                        physics: NeverScrollableScrollPhysics(),
-                                                        itemCount: data['produks'].length,
-                                                        itemBuilder: (BuildContext context, int index){
-                                                          return ListTile(
-                                                            leading: CircleAvatar(
-                                                              child: ClipRRect(
-                                                                borderRadius: BorderRadius.all(Radius.circular(100)),
-                                                                child: Image.network(data['produks'][index]['imageUrl'], fit: BoxFit.cover,),
-                                                              ),
-                                                            ),
-                                                            title: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      data['produks'][index]['nama_produk'],
-                                                                      style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
-                                                                    ),
-                                                                    Card(
-                                                                      color: Colors.deepOrange,
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsets.only(right: 5.0, left: 5.0, top: 3.0, bottom: 3.0),
-                                                                        child: Column(
-                                                                          children: [
-                                                                            Text(
-                                                                              data['produks'][index]['kode_produk'],
-                                                                              style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Text(
-                                                                  '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk']*data['produks'][index]['unit_produk'])}',
-                                                                  style: TextStyle(color: Colors.white, fontSize: 13,),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            subtitle: Row(
-                                                              children: [
-                                                                Text(
-                                                                  '${NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: 'Rp ').format(data['produks'][index]['harga_produk'])}/kg',
-                                                                  style: TextStyle(fontSize: 12, color: Colors.white,),
-                                                                ),
-                                                                Text(
-                                                                  ' x ${data['produks'][index]['unit_produk']}',
-                                                                  style: TextStyle(fontSize: 12, color: Colors.blue,),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                        }
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  );
+                                          );
+                                        }).toList(),
+                                      ),
+                                    );
+                                  }
                                 },
                               ),
                             ),
