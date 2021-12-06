@@ -59,7 +59,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     icon: const Icon(Icons.home_filled),
                     iconSize: 25.0,
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, HomeScreen.id);
+                      Navigator.of(context).pop();
                     },
                     color: Colors.white70,
                   ),
