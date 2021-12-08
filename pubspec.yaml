@@ -23,7 +23,6 @@ dependencies:
   bottom_navy_bar: ^6.0.0
   awesome_dialog: ^2.1.1
   firebase: ^9.0.2
-  ars_progress_dialog: 0.1.2
   image_picker: ^0.8.4+4
   flutter_easyloading: ^3.0.3
   otp_text_field: ^1.1.1

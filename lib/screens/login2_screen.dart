@@ -1,6 +1,6 @@
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:point_of_sale/screens/home_screen.dart';
 import 'package:point_of_sale/screens/register_admin_screen.dart';
 import 'package:point_of_sale/screens/reset_pw_admin_screen.dart';
@@ -28,22 +28,15 @@ class _Login2ScreenState extends State<Login2Screen> {
 
   @override
   Widget build(BuildContext context) {
-    ArsProgressDialog progressDialog = ArsProgressDialog(
-        context,
-        blur: 3,
-        backgroundColor: Color(0x33000000),
-        animationDuration: Duration(milliseconds: 500)
-    );
-
 
     Future<void> _login() async {
-      progressDialog.show();
+      EasyLoading.show(status: 'Login...');
       _services.getAdminCredentials().then((value){
         value.docs.forEach((doc) async {
           if(doc.get('username') == username){
             if(doc.get('password') == password){
               UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
-              progressDialog.dismiss();
+              EasyLoading.dismiss();
               if(userCredential.user!.uid != null){
                 Navigator.pushReplacementNamed(context, HomeScreen.id);
                 return;
@@ -54,14 +47,14 @@ class _Login2ScreenState extends State<Login2Screen> {
                 );
               }
             }else{
-              progressDialog.dismiss();
+              EasyLoading.dismiss();
               _showMyDialog(
                 tittle: 'Password Salah',
                 message: 'Masukkan PASSWORD yang benar!',
               );
             }
           }else{
-            progressDialog.dismiss();
+            EasyLoading.dismiss();
             _showMyDialog(
               tittle: 'Username Salah',
               message: 'Masukkan USERNAME yang benar!',
