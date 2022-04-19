@@ -57,7 +57,7 @@ class _SuplierScreenState extends State<SuplierScreen> {
                     icon: const Icon(Icons.home_filled),
                     iconSize: 25.0,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, HomeScreen.id);
                     },
                     color: Colors.white70,
                   ),
@@ -208,39 +208,6 @@ class _SuplierScreenState extends State<SuplierScreen> {
                                 ),
                               ],
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget> [
-                              IconButton(
-                                icon: Icon(Icons.delete_forever, color: Colors.red, size: 30,),
-                                onPressed: (){
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context){
-                                      return CupertinoAlertDialog(
-                                        title: Text('Hapus Suplier!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                        content: Text('Yakin ingin menghapus Suplier ${data['nama_suplier']}', style: TextStyle(fontSize: 18,),),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            child: Text('Batal'),
-                                            onPressed: (){Navigator.of(context).pop();},
-                                          ),
-                                          CupertinoDialogAction(
-                                            child: Text('Iya'),
-                                            onPressed: (){
-                                              EasyLoading.showSuccess('Dihapus');
-                                              Navigator.of(context).pop();
-                                              _services.suplier.doc(data['id_suplier']).delete();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
                           ),
                         ],
                       ),

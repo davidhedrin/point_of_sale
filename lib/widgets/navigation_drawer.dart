@@ -58,7 +58,6 @@ class NavigationDrawerWidget extends StatelessWidget {
               text: 'Beranda',
               icon: Icons.home_filled,
               onClicked: () {
-                Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, HomeScreen.id);
               },
               //onClicked: () => selectedItem(context, 0),
@@ -68,7 +67,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.people,
               onClicked: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, CustomerScreen.id);
+                Navigator.pushNamed(context, CustomerScreen.id);
               },
               //onClicked: () => selectedItem(context, 0),
             ),
@@ -77,7 +76,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.clean_hands,
               onClicked: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, SuplierScreen.id);
+                Navigator.pushNamed(context, SuplierScreen.id);
               },
             ),
             buildMenuItems(
@@ -85,7 +84,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.card_travel,
               onClicked: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, ProdukScreen.id);
+                Navigator.pushNamed(context, ProdukScreen.id);
               },
             ),
             buildMenuItems(
@@ -93,7 +92,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.category,
               onClicked: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, CategoryScreen.id);
+                Navigator.pushNamed(context, CategoryScreen.id);
               },
             ),
             const SizedBox(height: 10,),
@@ -102,7 +101,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.card_membership_sharp,
               onClicked: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, PosScreen.id);
+                Navigator.pushNamed(context, PosScreen.id);
               },
             ),
             buildMenuItems(
@@ -110,7 +109,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.assignment,
               onClicked: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, OrderScreen.id);
+                Navigator.pushNamed(context, OrderScreen.id);
               },
             ),
             Divider(color: Colors.white70,),
@@ -119,7 +118,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.power_settings_new,
               onClicked: (){
                 FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, Login2Screen.id);
+                Navigator.pushNamed(context, Login2Screen.id);
               },
             ),
           ],
@@ -138,14 +137,4 @@ class NavigationDrawerWidget extends StatelessWidget {
       onTap: onClicked,
     );
   }
-
-/*  void selectedItem(BuildContext context, int index) {
-    switch (index){
-      case 0:
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CustomerScreen(),
-        ),);
-        break;
-    }
-  }*/
 }

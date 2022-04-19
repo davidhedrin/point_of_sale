@@ -59,7 +59,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     icon: const Icon(Icons.home_filled),
                     iconSize: 25.0,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, HomeScreen.id);
                     },
                     color: Colors.white70,
                   ),
@@ -199,39 +199,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ],
                               ),
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget> [
-                              IconButton(
-                                icon: Icon(Icons.delete_forever, color: Colors.red, size: 30,),
-                                onPressed: (){
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context){
-                                      return CupertinoAlertDialog(
-                                        title: Text('Hapus Category!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                        content: Text('Yakin ingin menghapus Category ${data['category']}', style: TextStyle(fontSize: 18,),),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            child: Text('Batal'),
-                                            onPressed: (){Navigator.of(context).pop();},
-                                          ),
-                                          CupertinoDialogAction(
-                                            child: Text('Iya'),
-                                            onPressed: (){
-                                              EasyLoading.showSuccess('Dihapus');
-                                              Navigator.of(context).pop();
-                                              _services.category.doc(data['category_id']).delete();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
                           ),
                         ],
                       ),

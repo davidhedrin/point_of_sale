@@ -59,7 +59,7 @@ class _ProdukScreenState extends State<ProdukScreen> {
                     icon: const Icon(Icons.home_filled),
                     iconSize: 25.0,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, HomeScreen.id);
                     },
                     color: Colors.white70,
                   ),
@@ -158,39 +158,6 @@ class _ProdukScreenState extends State<ProdukScreen> {
                               padding: EdgeInsets.all(5),
                               color: Colors.black45,
                               child: GridTile(
-                                header: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.delete_forever_sharp, color: Colors.red,),
-                                      onPressed: (){
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context){
-                                            return CupertinoAlertDialog(
-                                              title: Text('Hapus Produk!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                              content: Text('Yakin ingin menghapus Produk ${data['nama_produk']}', style: TextStyle(fontSize: 18,),),
-                                              actions: [
-                                                CupertinoDialogAction(
-                                                  child: Text('Batal'),
-                                                  onPressed: (){Navigator.of(context).pop();},
-                                                ),
-                                                CupertinoDialogAction(
-                                                  child: Text('Iya'),
-                                                  onPressed: (){
-                                                    EasyLoading.showSuccess('Dihapus');
-                                                    Navigator.of(context).pop();
-                                                    _services.produk.doc(data['id_produk']).delete();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,

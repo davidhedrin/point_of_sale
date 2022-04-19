@@ -61,7 +61,7 @@ class _PosScreenState extends State<PosScreen> {
                     icon: const Icon(Icons.home_filled),
                     iconSize: 25.0,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, HomeScreen.id);
                     },
                     color: Colors.white70,
                   ),

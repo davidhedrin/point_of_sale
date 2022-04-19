@@ -73,7 +73,6 @@ class MyApp extends StatelessWidget {
         AddProdukData.id : (context) => AddProdukData(),
         AddPosCartScreen.id : (context) => AddPosCartScreen(),
         AddCategoryScreen.id : (context) => AddCategoryScreen(),
-
         ShowForgotePassword.id : (context) => ShowForgotePassword(),
       },
     );

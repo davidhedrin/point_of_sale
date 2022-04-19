@@ -59,7 +59,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     icon: const Icon(Icons.home_filled),
                     iconSize: 25.0,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, HomeScreen.id);
                     },
                     color: Colors.white70,
                   ),
@@ -215,39 +215,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: <Widget> [
-                                        IconButton(
-                                          icon: Icon(Icons.delete_forever, color: Colors.red, size: 30,),
-                                          onPressed: (){
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context){
-                                                return CupertinoAlertDialog(
-                                                  title: Text('Hapus Customer!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                                  content: Text('Yakin ingin menghapus Customer ${data['nama_customer']}', style: TextStyle(fontSize: 18,),),
-                                                  actions: [
-                                                    CupertinoDialogAction(
-                                                      child: Text('Batal'),
-                                                      onPressed: (){Navigator.of(context).pop();},
-                                                    ),
-                                                    CupertinoDialogAction(
-                                                      child: Text('Iya'),
-                                                      onPressed: (){
-                                                        EasyLoading.showSuccess('Dihapus');
-                                                        Navigator.of(context).pop();
-                                                        _services.customer.doc(data['id_customer']).delete();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ],
                                     ),
                                   ],
                                 ),

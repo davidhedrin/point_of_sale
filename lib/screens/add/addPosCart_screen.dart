@@ -349,32 +349,42 @@ class _AddPosCartScreenState extends State<AddPosCartScreen> {
                   ),
                   IgnorePointer(
                     ignoring: _ignoring,
-                    child: RaisedButton(
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(50.0),
-                      ),
-                      child: Text('CHECKOUT', style: TextStyle(color: Colors.white),),
-                      color: _ignoring ? Colors.grey :Colors.deepOrangeAccent,
-                      onPressed: (){
-                        EasyLoading.show(status: 'Menyimpan...');
-                        if(_formKey.currentState!.validate()){
-                          if(metodeKirim != null && metodeBayar != null){
-                            _authData.saveOrderToDbTrans(
-                              _cartProvider,
-                              double.parse(_cartProvider.subTotal.toString()),
-                              metodeBayar,
-                              metodeKirim,
-                            );
-                            _cart.removeCart();
-                            EasyLoading.showSuccess('Tersimpan');
-                            Navigator.pop(context);
-                          }else{
-                            EasyLoading.showInfo('Lengkapi data!');
-                          }
-                        }else{
-                          EasyLoading.showInfo('Lengkapi data!');
-                        }
-                      },
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: (){
+
+                          },
+                          icon: Icon(Icons.delete_forever_rounded, color: _ignoring ? Colors.grey : Colors.red,),
+                        ),
+                        RaisedButton(
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(50.0),
+                          ),
+                          child: Text('CHECKOUT', style: TextStyle(color: Colors.white),),
+                          color: _ignoring ? Colors.grey :Colors.deepOrangeAccent,
+                          onPressed: (){
+                            EasyLoading.show(status: 'Menyimpan...');
+                            if(_formKey.currentState!.validate()){
+                              if(metodeKirim != null && metodeBayar != null){
+                                _authData.saveOrderToDbTrans(
+                                  _cartProvider,
+                                  double.parse(_cartProvider.subTotal.toString()),
+                                  metodeBayar,
+                                  metodeKirim,
+                                );
+                                _cart.removeCart();
+                                EasyLoading.showSuccess('Tersimpan');
+                                Navigator.pop(context);
+                              }else{
+                                EasyLoading.showInfo('Lengkapi data!');
+                              }
+                            }else{
+                              EasyLoading.showInfo('Lengkapi data!');
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
